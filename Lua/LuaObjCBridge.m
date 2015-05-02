@@ -1162,7 +1162,7 @@ int lua_objc_methodcall(lua_State* state){
 #ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	unsigned resultSize=0;
 #endif
-	void* resultValue;
+	void* resultValue=NULL;
 	SEL selector=NULL;
 	char* selectorName=NULL;
 	int selectorNameLength=0;
