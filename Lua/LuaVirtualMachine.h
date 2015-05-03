@@ -40,6 +40,7 @@
 @property (readonly, strong) LuaVirtualMachine *virtualMachine;
 - (instancetype)initWithVirtualMachine:(LuaVirtualMachine *)virtualMachine;
 - (LuaValue *)evaluateScript:(NSString *)script;
+- (LuaValue *)evaluateScriptNamed:(NSString *)filename;
 - (id)objectForKeyedSubscript:(id)key;
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
 @end
