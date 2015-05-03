@@ -179,7 +179,7 @@
 //
 
 const luaL_reg lua_objc_functions[]={
-	{"class",lua_objc_lookup_class},
+	//{"class",lua_objc_lookup_class},
 	{NULL,NULL},
 	};
 	
@@ -283,6 +283,13 @@ int lua_objc_lookup_class(lua_State* state){
 int lua_objc_open(lua_State* state){
 #if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 	luaL_register(state,lua_tostring(state,-1),lua_objc_functions);
+
+	// Add the lookup class function as fallback
+	lua_getglobal(state, "objc");
+	lua_createtable(state, 0, 0);
+	lua_pushcfunction(state, lua_objc_lookup_class);
+	lua_setfield(state, -2, "__index");
+	lua_setmetatable(state, -2);
 #else
 	luaL_openlib(state,LUA_OBJC_LIBRARY_NAME,lua_objc_functions,0);
 #endif
