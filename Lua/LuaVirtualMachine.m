@@ -139,13 +139,7 @@ static void fixglobals (lua_State *L) {
 - (instancetype)init {
 	if (self = [super init]) {
 		L = lua_objc_init();
-
-		luaopen_base(L);
-		luaopen_table(L);
-		luaopen_io(L);
-		luaopen_string(L);
-		luaopen_math(L);
-		luaopen_debug(L);
+		luaL_openlibs(L);
 	}
 	return self;
 }
