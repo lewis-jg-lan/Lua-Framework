@@ -187,9 +187,11 @@ static void fixglobals (lua_State *L) {
 }
 
 - (LuaValue *)evaluateScript:(NSString *)script {
-	luaL_dostring(C, script.UTF8String);
-	if (lua_gettop(C)) {
-		return [[LuaValue alloc] initWithTopOfStackInContext:self];
+	if (script) {
+		luaL_dostring(C, script.UTF8String);
+		if (lua_gettop(C)) {
+			return [[LuaValue alloc] initWithTopOfStackInContext:self];
+		}
 	}
 	return nil;
 }
