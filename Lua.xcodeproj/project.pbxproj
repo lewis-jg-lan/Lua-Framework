@@ -10,6 +10,8 @@
 		2982C08514D3D5D10079E3AF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2982C08314D3D5D10079E3AF /* InfoPlist.strings */; };
 		E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */ = {isa = PBXBuildFile; fileRef = E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E405C7131AF191170028C0E1 /* LuaVirtualMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */; };
+		E4D6F1E01AF63E84005D475D /* objc.h in Headers */ = {isa = PBXBuildFile; fileRef = E4D6F1DE1AF63E84005D475D /* objc.h */; };
+		E4D6F1E11AF63E84005D475D /* objc.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D6F1DF1AF63E84005D475D /* objc.m */; };
 		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17C1AF46BA800A6C9F8 /* minilua.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -32,6 +34,8 @@
 		2982C08614D3D5D10079E3AF /* Lua-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Lua-Prefix.pch"; sourceTree = "<group>"; };
 		E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaVirtualMachine.h; sourceTree = "<group>"; };
 		E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaVirtualMachine.m; sourceTree = "<group>"; };
+		E4D6F1DE1AF63E84005D475D /* objc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = objc.h; sourceTree = "<group>"; };
+		E4D6F1DF1AF63E84005D475D /* objc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = objc.m; sourceTree = "<group>"; };
 		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
 		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
 		E4F4E17C1AF46BA800A6C9F8 /* minilua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilua.h; sourceTree = "<group>"; };
@@ -71,6 +75,8 @@
 				E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */,
 				E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */,
 				E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */,
+				E4D6F1DE1AF63E84005D475D /* objc.h */,
+				E4D6F1DF1AF63E84005D475D /* objc.m */,
 				E4F4E17C1AF46BA800A6C9F8 /* minilua.h */,
 				2982C08114D3D5D10079E3AF /* Supporting Files */,
 			);
@@ -96,6 +102,7 @@
 			files = (
 				E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */,
 				E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */,
+				E4D6F1E01AF63E84005D475D /* objc.h in Headers */,
 				E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,6 +210,7 @@
 			files = (
 				E405C7131AF191170028C0E1 /* LuaVirtualMachine.m in Sources */,
 				E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */,
+				E4D6F1E11AF63E84005D475D /* objc.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
