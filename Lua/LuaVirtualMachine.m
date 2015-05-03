@@ -196,6 +196,17 @@ static void fixglobals (lua_State *L) {
 	return nil;
 }
 
+- (LuaValue *)evaluateScriptNamed:(NSString *)filename {
+	NSString *fullpath = [[NSBundle mainBundle] pathForResource:filename ofType:@"lua"];
+	if (fullpath) {
+		luaL_dofile(C, fullpath.UTF8String);
+		if (lua_gettop(C)) {
+			return [[LuaValue alloc] initWithTopOfStackInContext:self];
+		}
+	}
+	return nil;
+}
+
 - (lua_State *)state {
 	return C;
 }
