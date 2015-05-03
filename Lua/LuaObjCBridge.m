@@ -15,7 +15,8 @@
 #pragma mark Header File Includes
 
 #import "LuaObjCBridge.h"
-	
+#include <dlfcn.h>
+
 //
 // Lua Versioning Configuration
 //
@@ -255,23 +256,49 @@ lua_State* lua_objc_init(){
 		}
 	return state;
 	}
-	
+
+//
+// Load a list of Frameworks.
+//
+
+static int lua_objc_import_framework(lua_State *L){
+	NSString *frameworksPath = @"/System/Library/Frameworks";
+
+	int i, n;
+	n = lua_gettop(L);
+
+	for(i=n;i>0;--i){
+		const char *framework = lua_tostring(L, -1);
+		NSBundle *bundle = [NSBundle bundleWithPath:[frameworksPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%s.framework", framework]]];
+		void* handle = dlopen(bundle.executablePath.UTF8String, RTLD_NOW);
+		dlclose(handle);
+		lua_pop(L, 1);
+		}
+
+	return 0;
+	}
+
 //
 // A Lua function. Takes a string from the Lua stack, and uses lua_objc_pushid()
 // to return the Objective-C class named by the string to the Lua caller.
 //
 	
 int lua_objc_lookup_class(lua_State* state){
-	id theClass;
+	const char *key = lua_tostring(state,-1);
+	if(strcmp(key, "import") == 0)
+		lua_pushcfunction(state, lua_objc_import_framework);
+	else{
+		id theClass;
 #ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-	theClass=NSClassFromString([NSString stringWithCString:lua_tostring(state,-1)]);
+		theClass=NSClassFromString([NSString stringWithCString:key]);
 #else
-	theClass=objc_lookUpClass(lua_tostring(state,-1));
+		theClass=objc_lookUpClass(key);
 #endif
-	if(theClass!=nil)
-		lua_objc_pushid(state,theClass);
-	else
-		lua_pushnil(state);
+		if(theClass!=nil)
+			lua_objc_pushid(state,theClass);
+		else
+			lua_pushnil(state);
+		}
 	return 1;
 	}
 	
