@@ -7,29 +7,29 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>88876086-CFDA-4912-8D34-D3AED8C24417</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Lua</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>01CBE6DB41694A302D28D92C8BB0BD4E34712EA4</key>
-		<string>https://github.com/rraallvv/Lua.framework.git</string>
+		<key>71945FF0A5A6C242791B9FE17F5CBA3CF45F6C9F</key>
+		<string>https://github.com/rraallvv/Lua-Framework</string>
 		<key>9359008975EFF020186C3D7E7C439A0B8C4FBCE8</key>
-		<string>https://github.com/rraallvv/GameEditor.git</string>
+		<string>https://github.com/rraallvv/GameEditor</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Lua.xcodeproj</string>
+	<string>Lua.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>01CBE6DB41694A302D28D92C8BB0BD4E34712EA4</key>
+		<key>71945FF0A5A6C242791B9FE17F5CBA3CF45F6C9F</key>
 		<string>../..</string>
 		<key>9359008975EFF020186C3D7E7C439A0B8C4FBCE8</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/rraallvv/Lua.framework.git</string>
+	<string>https://github.com/rraallvv/Lua-Framework</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>01CBE6DB41694A302D28D92C8BB0BD4E34712EA4</string>
+	<string>71945FF0A5A6C242791B9FE17F5CBA3CF45F6C9F</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -44,9 +44,9 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>01CBE6DB41694A302D28D92C8BB0BD4E34712EA4</string>
+			<string>71945FF0A5A6C242791B9FE17F5CBA3CF45F6C9F</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Lua.framework</string>
+			<string>Lua-Framework</string>
 		</dict>
 	</array>
 </dict>
