@@ -189,7 +189,7 @@ static void fixglobals (lua_State *L) {
 - (LuaValue *)evaluateScript:(NSString *)script {
 	if (script) {
 		luaL_dostring(C, script.UTF8String);
-		if (lua_gettop(C)) {
+		if (lua_gettop(C) && !lua_isnoneornil(C, -1)) {
 			return [[LuaValue alloc] initWithTopOfStackInContext:self];
 		}
 	}
@@ -200,7 +200,7 @@ static void fixglobals (lua_State *L) {
 	NSString *fullpath = [[NSBundle mainBundle] pathForResource:filename ofType:@"lua"];
 	if (fullpath) {
 		luaL_dofile(C, fullpath.UTF8String);
-		if (lua_gettop(C)) {
+		if (lua_gettop(C) && !lua_isnoneornil(C, -1)) {
 			return [[LuaValue alloc] initWithTopOfStackInContext:self];
 		}
 	}
@@ -211,12 +211,12 @@ static void fixglobals (lua_State *L) {
 	return C;
 }
 
-- (id)objectForKeyedSubscript:(id)key {
+- (LuaValue *)objectForKeyedSubscript:(id)key {
 	if ([key isKindOfClass:[NSString class]]) {
 		lua_getglobal(self.state, [[self luaKeyWithString:key] UTF8String]);
-		id obj = lua_objc_topropertylist(self.state, -1);
-		lua_pop(self.state, 1);
-		return obj;
+		if (!lua_isnoneornil(C, -1)) {
+			return [[LuaValue alloc] initWithTopOfStackInContext:self];
+		}
 	}
 	return nil;
 }
@@ -257,6 +257,7 @@ static void fixglobals (lua_State *L) {
 
 - (void)storeTopOfStack {
 	_index = luaL_ref(_context.state, LUA_REGISTRYINDEX);
+	NSAssert(_index >= 0, @"An index less or equal than zero means there is no object to be stored");
 }
 
 - (instancetype)initWithTopOfStackInContext:(LuaContext *)context {
@@ -264,6 +265,18 @@ static void fixglobals (lua_State *L) {
 		[self storeTopOfStack];
 	}
 	return self;
+}
+
+- (instancetype)initWithObject:(id)value inContext:(LuaContext *)context {
+	if (self = [self initWithContext:context]) {
+		lua_objc_pushpropertylist(_context.state, value);
+		[self storeTopOfStack];
+	}
+	return self;
+}
+
++ (instancetype)valueWithObject:(id)value inContext:(LuaContext *)context {
+	return [[self alloc] initWithObject:value inContext:context];
 }
 
 - (instancetype)initWithInt32:(int32_t)value inContext:(LuaContext *)context {
@@ -276,6 +289,13 @@ static void fixglobals (lua_State *L) {
 
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context {
 	return [[self alloc] initWithInt32:value inContext:context];
+}
+
+- (id)toObject {
+	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
+	id obj = lua_objc_topropertylist(_context.state, -1);
+	lua_pop(_context.state, 1);
+	return obj;
 }
 
 - (int32_t)toInt32 {
