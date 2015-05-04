@@ -49,9 +49,7 @@
 
 @interface LuaValue : NSObject
 @property (readonly, strong) LuaContext *context;
-+ (instancetype)valueWithString:(NSString *)string inContext:(LuaContext *)context;
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context;
-- (NSString *)toString;
 - (int32_t)toInt32;
 - (LuaValue *)callWithArguments:(NSArray *)arguments;
 @end

@@ -214,7 +214,12 @@ static void fixglobals (lua_State *L) {
 - (id)objectForKeyedSubscript:(id)key {
 	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
 		lua_getglobal(self.state, [key UTF8String]);
-		id obj = lua_objc_toid(self.state, -1);
+		id obj = nil;
+		if (lua_isstring(self.state, -1)) {
+			obj = [NSString stringWithUTF8String:lua_tostring(self.state, -1)];
+		} else {
+			obj = lua_objc_toid(self.state, -1);
+		}
 		lua_pop(self.state, 1);
 		return obj;
 	}
@@ -223,9 +228,14 @@ static void fixglobals (lua_State *L) {
 
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key {
 	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
-		lua_pushstring(self.state, [(NSString *)key UTF8String]);
-		lua_objc_pushid(self.state, obj);
-		lua_settable(self.state, LUA_GLOBALSINDEX);
+		if ([obj isKindOfClass:[NSString class]]) {
+			lua_pushstring(self.state, [(NSString *)obj UTF8String]);
+			lua_setglobal(self.state, [(NSString *)key UTF8String]);
+		} else {
+			lua_pushstring(self.state, [(NSString *)key UTF8String]);
+			lua_objc_pushid(self.state, obj);
+			lua_settable(self.state, LUA_GLOBALSINDEX);
+		}
 	}
 }
 
@@ -261,18 +271,6 @@ static void fixglobals (lua_State *L) {
 	return self;
 }
 
-- (instancetype)initWithString:(NSString *)string inContext:(LuaContext *)context {
-	if (self = [self initWithContext:context]) {
-		lua_pushstring(_context.state, string.UTF8String);
-		[self storeTopOfStack];
-	}
-	return self;
-}
-
-+ (instancetype)valueWithString:(NSString *)string inContext:(LuaContext *)context {
-	return [[self alloc] initWithString:string inContext:context];
-}
-
 - (instancetype)initWithInt32:(int32_t)value inContext:(LuaContext *)context {
 	if (self = [self initWithContext:context]) {
 		lua_pushinteger(_context.state, value);
@@ -283,13 +281,6 @@ static void fixglobals (lua_State *L) {
 
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context {
 	return [[self alloc] initWithInt32:value inContext:context];
-}
-
-- (NSString *)toString {
-	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
-	NSString *string = [NSString stringWithUTF8String:lua_tostring(_context.state, -1)];
-	lua_pop(_context.state, 1);
-	return string;
 }
 
 - (int32_t)toInt32 {
