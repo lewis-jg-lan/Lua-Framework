@@ -212,14 +212,9 @@ static void fixglobals (lua_State *L) {
 }
 
 - (id)objectForKeyedSubscript:(id)key {
-	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
+	if ([key isKindOfClass:[NSString class]]) {
 		lua_getglobal(self.state, [key UTF8String]);
-		id obj = nil;
-		if (lua_isstring(self.state, -1)) {
-			obj = [NSString stringWithUTF8String:lua_tostring(self.state, -1)];
-		} else {
-			obj = lua_objc_toid(self.state, -1);
-		}
+		id obj = lua_objc_topropertylist(self.state, -1);
 		lua_pop(self.state, 1);
 		return obj;
 	}
@@ -228,13 +223,8 @@ static void fixglobals (lua_State *L) {
 
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key {
 	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
-		if ([obj isKindOfClass:[NSString class]]) {
-			lua_pushstring(self.state, [(NSString *)obj UTF8String]);
+		if (lua_objc_pushpropertylist(self.state, obj)) {
 			lua_setglobal(self.state, [(NSString *)key UTF8String]);
-		} else {
-			lua_pushstring(self.state, [(NSString *)key UTF8String]);
-			lua_objc_pushid(self.state, obj);
-			lua_settable(self.state, LUA_GLOBALSINDEX);
 		}
 	}
 }
