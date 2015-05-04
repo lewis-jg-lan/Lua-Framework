@@ -773,7 +773,7 @@ BOOL lua_objc_pushpropertylist(lua_State* state,id propertylist){
 	// NSNull
 	//
 		 
-	if((propertylist==nil)||([propertylist isKindOfClass:[NSNull class]])){
+	if((propertylist==nil)||(propertylist==[NSNull null])){
 		lua_pushnil(state);
 		lua_objc_setid(state,-1,propertylist);
 		}
@@ -940,7 +940,7 @@ id lua_objc_topropertylist(lua_State* state,int stack_index){
 		//
 		 
 		case LUA_TTABLE:{
-			if([original isKindOfClass:[NSDictionary class]] || [original isKindOfClass:[NSArray class]]){
+			if(([original isKindOfClass:[NSDictionary class]])||([original isKindOfClass:[NSArray class]])){
 				NSMutableArray* keys=[NSMutableArray array];
 				NSMutableArray* values=[NSMutableArray array];
 				double key;
@@ -1015,7 +1015,7 @@ id lua_objc_topropertylist(lua_State* state,int stack_index){
 		case LUA_TTHREAD:
 		case LUA_TLIGHTUSERDATA:
 		default:{
-			result=[NSNull null];
+			result=nil;
 			break;
 			}
 		}
