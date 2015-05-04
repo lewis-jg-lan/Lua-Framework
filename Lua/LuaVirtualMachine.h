@@ -41,7 +41,7 @@
 - (instancetype)initWithVirtualMachine:(LuaVirtualMachine *)virtualMachine;
 - (LuaValue *)evaluateScript:(NSString *)script;
 - (LuaValue *)evaluateScriptNamed:(NSString *)filename;
-- (id)objectForKeyedSubscript:(id)key;
+- (LuaValue *)objectForKeyedSubscript:(id)key;
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
 @end
 
@@ -49,7 +49,9 @@
 
 @interface LuaValue : NSObject
 @property (readonly, strong) LuaContext *context;
++ (instancetype)valueWithObject:(id)value inContext:(LuaContext *)context;
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context;
+- (id)toObject;
 - (int32_t)toInt32;
 - (LuaValue *)callWithArguments:(NSArray *)arguments;
 @end
