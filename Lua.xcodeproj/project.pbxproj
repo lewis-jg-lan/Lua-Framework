@@ -10,6 +10,8 @@
 		2982C08514D3D5D10079E3AF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2982C08314D3D5D10079E3AF /* InfoPlist.strings */; };
 		E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */ = {isa = PBXBuildFile; fileRef = E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E405C7131AF191170028C0E1 /* LuaVirtualMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */; };
+		E4D6F1F11AF7A0A2005D475D /* Lua_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D6F1F01AF7A0A2005D475D /* Lua_Tests.m */; };
+		E4D6F1F21AF7A0A2005D475D /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
 		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17C1AF46BA800A6C9F8 /* minilua.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -23,6 +25,13 @@
 			remoteGlobalIDString = E4B087901AF121CC00709590;
 			remoteInfo = LuaJIT;
 		};
+		E4D6F1F31AF7A0A2005D475D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2982C06D14D3D5D10079E3AF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2982C07614D3D5D10079E3AF;
+			remoteInfo = Lua;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +41,9 @@
 		2982C08614D3D5D10079E3AF /* Lua-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Lua-Prefix.pch"; sourceTree = "<group>"; };
 		E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaVirtualMachine.h; sourceTree = "<group>"; };
 		E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaVirtualMachine.m; sourceTree = "<group>"; };
+		E4D6F1EC1AF7A0A2005D475D /* Lua Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lua Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4D6F1EF1AF7A0A2005D475D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E4D6F1F01AF7A0A2005D475D /* Lua_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lua_Tests.m; sourceTree = "<group>"; };
 		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
 		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
 		E4F4E17C1AF46BA800A6C9F8 /* minilua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilua.h; sourceTree = "<group>"; };
@@ -45,6 +57,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E4D6F1E91AF7A0A2005D475D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4D6F1F21AF7A0A2005D475D /* Lua.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -52,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				2982C08014D3D5D10079E3AF /* Lua */,
+				E4D6F1ED1AF7A0A2005D475D /* Lua Tests */,
 				2982C07814D3D5D10079E3AF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				2982C07714D3D5D10079E3AF /* Lua.framework */,
+				E4D6F1EC1AF7A0A2005D475D /* Lua Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +105,23 @@
 				2982C08214D3D5D10079E3AF /* Lua-Info.plist */,
 				2982C08314D3D5D10079E3AF /* InfoPlist.strings */,
 				2982C08614D3D5D10079E3AF /* Lua-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E4D6F1ED1AF7A0A2005D475D /* Lua Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E4D6F1F01AF7A0A2005D475D /* Lua_Tests.m */,
+				E4D6F1EE1AF7A0A2005D475D /* Supporting Files */,
+			);
+			path = "Lua Tests";
+			sourceTree = "<group>";
+		};
+		E4D6F1EE1AF7A0A2005D475D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E4D6F1EF1AF7A0A2005D475D /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -153,6 +192,24 @@
 			productReference = 2982C07714D3D5D10079E3AF /* Lua.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		E4D6F1EB1AF7A0A2005D475D /* Lua Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4D6F1F71AF7A0A2005D475D /* Build configuration list for PBXNativeTarget "Lua Tests" */;
+			buildPhases = (
+				E4D6F1E81AF7A0A2005D475D /* Sources */,
+				E4D6F1E91AF7A0A2005D475D /* Frameworks */,
+				E4D6F1EA1AF7A0A2005D475D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E4D6F1F41AF7A0A2005D475D /* PBXTargetDependency */,
+			);
+			name = "Lua Tests";
+			productName = "Lua Tests";
+			productReference = E4D6F1EC1AF7A0A2005D475D /* Lua Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -162,6 +219,9 @@
 				LastUpgradeCheck = 0630;
 				TargetAttributes = {
 					E4B087901AF121CC00709590 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+					E4D6F1EB1AF7A0A2005D475D = {
 						CreatedOnToolsVersion = 6.3.1;
 					};
 				};
@@ -181,6 +241,7 @@
 				2982C07614D3D5D10079E3AF /* Lua */,
 				E47C38951AF4AACA009DFB82 /* ZERO */,
 				E4B087901AF121CC00709590 /* LuaJIT */,
+				E4D6F1EB1AF7A0A2005D475D /* Lua Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -191,6 +252,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2982C08514D3D5D10079E3AF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4D6F1EA1AF7A0A2005D475D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +274,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E4D6F1E81AF7A0A2005D475D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4D6F1F11AF7A0A2005D475D /* Lua_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -213,6 +289,11 @@
 			isa = PBXTargetDependency;
 			target = E4B087901AF121CC00709590 /* LuaJIT */;
 			targetProxy = E4B087941AF121F700709590 /* PBXContainerItemProxy */;
+		};
+		E4D6F1F41AF7A0A2005D475D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2982C07614D3D5D10079E3AF /* Lua */;
+			targetProxy = E4D6F1F31AF7A0A2005D475D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -245,6 +326,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -282,6 +365,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -469,6 +554,59 @@
 			};
 			name = Release;
 		};
+		E4D6F1F51AF7A0A2005D475D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Lua Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E4D6F1F61AF7A0A2005D475D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Lua Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -504,6 +642,15 @@
 			buildConfigurations = (
 				E4B087921AF121CC00709590 /* Debug */,
 				E4B087931AF121CC00709590 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4D6F1F71AF7A0A2005D475D /* Build configuration list for PBXNativeTarget "Lua Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4D6F1F51AF7A0A2005D475D /* Debug */,
+				E4D6F1F61AF7A0A2005D475D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

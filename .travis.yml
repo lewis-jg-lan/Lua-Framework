@@ -1,0 +1,6 @@
+language: objective-c
+before_install: sudo easy_install cpp-coveralls
+xcode_project: Lua.xcodeproj
+xcode_scheme: Lua
+xcode_sdk: macosx10.10
+after_success: coveralls
