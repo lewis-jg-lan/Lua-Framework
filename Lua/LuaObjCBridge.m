@@ -857,11 +857,12 @@ BOOL lua_objc_pushpropertylist(lua_State* state,id propertylist){
 		}
 
 	//
-	// All other classes produce an error
+	// Class or instance object
 	//
-	 
+
 	else{
-		result=NO;
+		lua_objc_pushid(state,propertylist);
+		lua_objc_setid(state,-1,propertylist);
 		}
 		
 	if(!result)
@@ -939,64 +940,68 @@ id lua_objc_topropertylist(lua_State* state,int stack_index){
 		//
 		 
 		case LUA_TTABLE:{
-			NSMutableArray* keys=[NSMutableArray array];
-			NSMutableArray* values=[NSMutableArray array];
-			double key;
-			BOOL array=YES;
-			lua_pushnil(state);
-			for(key=1;lua_next(state,stack_index);key++){
-			
-				//
-				// If the Lua Table has so far conformed to the conditions for an array...
-				//
-			
-				if(array){
-			
-					//
-					// ..but this key either not a number, or not the number we expect..
-					//
-					
-					if((lua_type(state,-2)!=LUA_TNUMBER)||(key!=lua_tonumber(state,-2))){
-					
-						//
-						// ..nor is it the "n" key accompanied by a number indicating the size of the array...
-						//
+			if([original isKindOfClass:[NSDictionary class]] || [original isKindOfClass:[NSArray class]]){
+				NSMutableArray* keys=[NSMutableArray array];
+				NSMutableArray* values=[NSMutableArray array];
+				double key;
+				BOOL array=YES;
+				lua_pushnil(state);
+				for(key=1;lua_next(state,stack_index);key++){
 				
-						if((lua_type(state,-2)!=LUA_TSTRING)||(strcmp(lua_tostring(state,-2),"n")!=0)||(lua_type(state,-1)!=LUA_TNUMBER)){
+					//
+					// If the Lua Table has so far conformed to the conditions for an array...
+					//
+				
+					if(array){
+				
+						//
+						// ..but this key either not a number, or not the number we expect..
+						//
+						
+						if((lua_type(state,-2)!=LUA_TNUMBER)||(key!=lua_tonumber(state,-2))){
 						
 							//
-							// ..then this table is not an array, it's a dictionary.
+							// ..nor is it the "n" key accompanied by a number indicating the size of the array...
 							//
-						
-							array=NO;
-							}
-						else{
-						
-							//
-							// If it *is* an array, however, we don't want to insert the Lua-internal "n" element into the ObjC array, since it just gives the array length
-							//
-						
-							key=0.0;
+					
+							if((lua_type(state,-2)!=LUA_TSTRING)||(strcmp(lua_tostring(state,-2),"n")!=0)||(lua_type(state,-1)!=LUA_TNUMBER)){
+							
+								//
+								// ..then this table is not an array, it's a dictionary.
+								//
+							
+								array=NO;
+								}
+							else{
+							
+								//
+								// If it *is* an array, however, we don't want to insert the Lua-internal "n" element into the ObjC array, since it just gives the array length
+								//
+							
+								key=0.0;
+								}
 							}
 						}
-					}
+						
+					//	
+					// Update the ObjC values we've been storing
+					//
 					
-				//	
-				// Update the ObjC values we've been storing
-				//
-				
-				if(key){
-					[values addObject:lua_objc_topropertylist(state,-1)];
-					[keys addObject:lua_objc_topropertylist(state,-2)];
+					if(key){
+						[values addObject:lua_objc_topropertylist(state,-1)];
+						[keys addObject:lua_objc_topropertylist(state,-2)];
+						}
+					lua_pop(state,1);
 					}
-				lua_pop(state,1);
+				if(array){
+					result=values;
+					}
+				else{
+					result=[NSMutableDictionary dictionaryWithObjects:values forKeys:keys];
+					}
 				}
-			if(array){
-				result=values;
-				}
-			else{
-				result=[NSMutableDictionary dictionaryWithObjects:values forKeys:keys];
-				}
+			else
+				result=original;
 			break;
 			}
 	
@@ -1019,7 +1024,7 @@ id lua_objc_topropertylist(lua_State* state,int stack_index){
 	// Return the original object if its value hasn't been changed by the Lua script
 	//
 		
-	if([result isEqual:original]){
+	if(result != original && [result isEqual:original]){
 		result=original;
 		}
 	return result;
