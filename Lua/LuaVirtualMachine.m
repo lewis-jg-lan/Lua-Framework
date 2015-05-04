@@ -213,7 +213,7 @@ static void fixglobals (lua_State *L) {
 
 - (id)objectForKeyedSubscript:(id)key {
 	if ([key isKindOfClass:[NSString class]]) {
-		lua_getglobal(self.state, [key UTF8String]);
+		lua_getglobal(self.state, [[self luaKeyWithString:key] UTF8String]);
 		id obj = lua_objc_topropertylist(self.state, -1);
 		lua_pop(self.state, 1);
 		return obj;
@@ -224,9 +224,14 @@ static void fixglobals (lua_State *L) {
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key {
 	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
 		if (lua_objc_pushpropertylist(self.state, obj)) {
-			lua_setglobal(self.state, [(NSString *)key UTF8String]);
+			lua_setglobal(self.state, [[self luaKeyWithString:(NSString *)key] UTF8String]);
 		}
 	}
+}
+
+- (NSString *)luaKeyWithString:(NSString *)string {
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\W." options:NSRegularExpressionCaseInsensitive error:NULL];
+	return [regex stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, [string length]) withTemplate:@"_"];
 }
 
 - (void)dealloc {
