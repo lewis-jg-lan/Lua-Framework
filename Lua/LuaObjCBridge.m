@@ -290,7 +290,7 @@ int lua_objc_lookup_class(lua_State* state){
 	else{
 		id theClass;
 #ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-		theClass=NSClassFromString([NSString stringWithCString:key]);
+		theClass=NSClassFromString([NSString stringWithUTF8String:key]);
 #else
 		theClass=objc_lookUpClass(key);
 #endif
@@ -1239,7 +1239,7 @@ int lua_objc_methodcall(lua_State* state){
 	//
 	 
 #ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-	selector=NSSelectorFromString([NSString stringWithCString:selectorName]);
+	selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
 	signature=[receiver methodSignatureForSelector:selector];
 	if(signature==nil){
 #else
@@ -1250,7 +1250,7 @@ int lua_objc_methodcall(lua_State* state){
 		selectorName[stack_index]=':';
 		selectorName[stack_index+1]='\0';
 #ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-		selector=NSSelectorFromString([NSString stringWithCString:selectorName]);
+		selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
 		signature=[receiver methodSignatureForSelector:selector];
 		}
 	if(signature==nil){
@@ -1709,7 +1709,7 @@ int lua_objc_methodcall(lua_State* state){
 				if(lua_isstring(state,luaArgument)){
 					SEL value;
 #ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-					value=NSSelectorFromString([NSString stringWithCString:(lua_tostring(state,luaArgument))]);
+					value=NSSelectorFromString([NSString stringWithUTF8String:(lua_tostring(state,luaArgument))]);
 					lua_objc_methodcall_setArgumentValue(SEL,value);
 #else
 					value=sel_registerName(lua_tostring(state,luaArgument));
