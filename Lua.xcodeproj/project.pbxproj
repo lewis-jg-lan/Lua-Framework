@@ -10,6 +10,7 @@
 		2982C08514D3D5D10079E3AF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2982C08314D3D5D10079E3AF /* InfoPlist.strings */; };
 		E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */ = {isa = PBXBuildFile; fileRef = E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E405C7131AF191170028C0E1 /* LuaVirtualMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */; };
+		E43758591AF9754D00FF0C83 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
 		E4B6E2AD1AF917C100CF84E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2AC1AF917C100CF84E6 /* AppDelegate.m */; };
 		E4B6E2B11AF917C100CF84E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2B01AF917C100CF84E6 /* Images.xcassets */; };
 		E4B6E2B41AF917C100CF84E6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2B21AF917C100CF84E6 /* MainMenu.xib */; };
@@ -89,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E43758591AF9754D00FF0C83 /* Lua.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -825,6 +827,7 @@
 				E4B6E2C31AF917C200CF84E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLuaTests" */ = {
 			isa = XCConfigurationList;
@@ -833,6 +836,7 @@
 				E4B6E2C61AF917C200CF84E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
