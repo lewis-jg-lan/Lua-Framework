@@ -306,6 +306,44 @@ static void fixglobals (lua_State *L) {
 }
 
 - (LuaValue *)callWithArguments:(NSArray *)arguments {
+
+	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
+
+	if (!lua_isfunction(_context.state, -1))
+		return nil;
+
+	for (id arg in arguments) {
+		lua_objc_pushpropertylist(_context.state, arg);
+	}
+
+	int err = lua_pcall(_context.state, (int)arguments.count, 1, 0);
+	if (err != 0) {
+		switch(err) {
+			case LUA_ERRRUN:
+				NSLog(@"Lua: runtime error");
+				break;
+
+			case LUA_ERRMEM:
+				NSLog(@"Lua: memory allocation error");
+				break;
+
+			case LUA_ERRERR:
+				NSLog(@"Lua: error handler error");
+				break;
+
+			default:
+				NSLog(@"Lua: unknown error");
+				return nil;
+		}
+
+		NSLog(@"Lua: %s", lua_tostring(_context.state, -1));
+		return nil;
+	}
+
+	if (!lua_isnoneornil(_context.state, -1)) {
+		return [[LuaValue alloc] initWithTopOfStackInContext:_context];
+	}
+
 	return nil;
 }
 

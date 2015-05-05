@@ -7,7 +7,7 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>88876086-CFDA-4912-8D34-D3AED8C24417</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>Lua</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>71945FF0A5A6C242791B9FE17F5CBA3CF45F6C9F</key>
@@ -16,7 +16,7 @@
 		<string>https://github.com/rraallvv/GameEditor</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Lua.xcodeproj/project.xcworkspace</string>
+	<string>Lua.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>71945FF0A5A6C242791B9FE17F5CBA3CF45F6C9F</key>

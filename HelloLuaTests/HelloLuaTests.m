@@ -1,19 +1,19 @@
 //
-//  Lua_Tests.m
-//  Lua Tests
+//  HelloLuaTests.m
+//  HelloLuaTests
 //
-//  Created by Rhody Lugo on 5/4/15.
+//  Created by Rhody Lugo on 5/5/15.
 //
 //
 
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
 
-@interface Lua_Tests : XCTestCase
+@interface HelloLuaTests : XCTestCase
 
 @end
 
-@implementation Lua_Tests
+@implementation HelloLuaTests
 
 - (void)setUp {
     [super setUp];
