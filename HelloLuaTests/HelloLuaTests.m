@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
+#import <Lua/LuaVirtualMachine.h>
 
 @interface HelloLuaTests : XCTestCase
 
@@ -25,9 +26,9 @@
     [super tearDown];
 }
 
-- (void)testExample {
+- (void)testLuaVirtualMachineInit {
     // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+    XCTAssert([[LuaVirtualMachine alloc] init], @"Pass");
 }
 
 - (void)testPerformanceExample {
