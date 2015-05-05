@@ -10,8 +10,13 @@
 		2982C08514D3D5D10079E3AF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2982C08314D3D5D10079E3AF /* InfoPlist.strings */; };
 		E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */ = {isa = PBXBuildFile; fileRef = E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E405C7131AF191170028C0E1 /* LuaVirtualMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */; };
-		E4D6F1F11AF7A0A2005D475D /* Lua_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D6F1F01AF7A0A2005D475D /* Lua_Tests.m */; };
-		E4D6F1F21AF7A0A2005D475D /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
+		E4B6E2AD1AF917C100CF84E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2AC1AF917C100CF84E6 /* AppDelegate.m */; };
+		E4B6E2B11AF917C100CF84E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2B01AF917C100CF84E6 /* Images.xcassets */; };
+		E4B6E2B41AF917C100CF84E6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2B21AF917C100CF84E6 /* MainMenu.xib */; };
+		E4B6E2C01AF917C200CF84E6 /* HelloLuaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2BF1AF917C200CF84E6 /* HelloLuaTests.m */; };
+		E4B6E2CA1AF918C600CF84E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2C81AF918C600CF84E6 /* main.m */; };
+		E4B6E2CE1AF91AEF00CF84E6 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
+		E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2D11AF91BAB00CF84E6 /* test.lua */; };
 		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17C1AF46BA800A6C9F8 /* minilua.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -25,7 +30,14 @@
 			remoteGlobalIDString = E4B087901AF121CC00709590;
 			remoteInfo = LuaJIT;
 		};
-		E4D6F1F31AF7A0A2005D475D /* PBXContainerItemProxy */ = {
+		E4B6E2BA1AF917C200CF84E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2982C06D14D3D5D10079E3AF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E4B6E2A61AF917C100CF84E6;
+			remoteInfo = HelloLua;
+		};
+		E4B6E2CF1AF91AF300CF84E6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2982C06D14D3D5D10079E3AF /* Project object */;
 			proxyType = 1;
@@ -41,9 +53,17 @@
 		2982C08614D3D5D10079E3AF /* Lua-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Lua-Prefix.pch"; sourceTree = "<group>"; };
 		E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaVirtualMachine.h; sourceTree = "<group>"; };
 		E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaVirtualMachine.m; sourceTree = "<group>"; };
-		E4D6F1EC1AF7A0A2005D475D /* Lua Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lua Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4D6F1EF1AF7A0A2005D475D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4D6F1F01AF7A0A2005D475D /* Lua_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lua_Tests.m; sourceTree = "<group>"; };
+		E4B6E2A71AF917C100CF84E6 /* HelloLua.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloLua.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B6E2AB1AF917C100CF84E6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E4B6E2AC1AF917C100CF84E6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E4B6E2B01AF917C100CF84E6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		E4B6E2B31AF917C100CF84E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		E4B6E2B91AF917C200CF84E6 /* HelloLuaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloLuaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B6E2BE1AF917C200CF84E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E4B6E2BF1AF917C200CF84E6 /* HelloLuaTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelloLuaTests.m; sourceTree = "<group>"; };
+		E4B6E2C71AF918C600CF84E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E4B6E2C81AF918C600CF84E6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E4B6E2D11AF91BAB00CF84E6 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
 		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
 		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
 		E4F4E17C1AF46BA800A6C9F8 /* minilua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilua.h; sourceTree = "<group>"; };
@@ -57,11 +77,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4D6F1E91AF7A0A2005D475D /* Frameworks */ = {
+		E4B6E2A41AF917C100CF84E6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4D6F1F21AF7A0A2005D475D /* Lua.framework in Frameworks */,
+				E4B6E2CE1AF91AEF00CF84E6 /* Lua.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4B6E2B61AF917C200CF84E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,7 +99,8 @@
 			isa = PBXGroup;
 			children = (
 				2982C08014D3D5D10079E3AF /* Lua */,
-				E4D6F1ED1AF7A0A2005D475D /* Lua Tests */,
+				E4B6E2A81AF917C100CF84E6 /* HelloLua */,
+				E4B6E2BC1AF917C200CF84E6 /* HelloLuaTests */,
 				2982C07814D3D5D10079E3AF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,7 +109,8 @@
 			isa = PBXGroup;
 			children = (
 				2982C07714D3D5D10079E3AF /* Lua.framework */,
-				E4D6F1EC1AF7A0A2005D475D /* Lua Tests.xctest */,
+				E4B6E2A71AF917C100CF84E6 /* HelloLua.app */,
+				E4B6E2B91AF917C200CF84E6 /* HelloLuaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,19 +138,41 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		E4D6F1ED1AF7A0A2005D475D /* Lua Tests */ = {
+		E4B6E2A81AF917C100CF84E6 /* HelloLua */ = {
 			isa = PBXGroup;
 			children = (
-				E4D6F1F01AF7A0A2005D475D /* Lua_Tests.m */,
-				E4D6F1EE1AF7A0A2005D475D /* Supporting Files */,
+				E4B6E2AB1AF917C100CF84E6 /* AppDelegate.h */,
+				E4B6E2AC1AF917C100CF84E6 /* AppDelegate.m */,
+				E4B6E2B01AF917C100CF84E6 /* Images.xcassets */,
+				E4B6E2B21AF917C100CF84E6 /* MainMenu.xib */,
+				E4B6E2D11AF91BAB00CF84E6 /* test.lua */,
+				E4B6E2CB1AF9195A00CF84E6 /* Supporting Files */,
 			);
-			path = "Lua Tests";
+			path = HelloLua;
 			sourceTree = "<group>";
 		};
-		E4D6F1EE1AF7A0A2005D475D /* Supporting Files */ = {
+		E4B6E2BC1AF917C200CF84E6 /* HelloLuaTests */ = {
 			isa = PBXGroup;
 			children = (
-				E4D6F1EF1AF7A0A2005D475D /* Info.plist */,
+				E4B6E2BF1AF917C200CF84E6 /* HelloLuaTests.m */,
+				E4B6E2BD1AF917C200CF84E6 /* Supporting Files */,
+			);
+			path = HelloLuaTests;
+			sourceTree = "<group>";
+		};
+		E4B6E2BD1AF917C200CF84E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E4B6E2BE1AF917C200CF84E6 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E4B6E2CB1AF9195A00CF84E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E4B6E2C71AF918C600CF84E6 /* Info.plist */,
+				E4B6E2C81AF918C600CF84E6 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -192,22 +243,40 @@
 			productReference = 2982C07714D3D5D10079E3AF /* Lua.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		E4D6F1EB1AF7A0A2005D475D /* Lua Tests */ = {
+		E4B6E2A61AF917C100CF84E6 /* HelloLua */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4D6F1F71AF7A0A2005D475D /* Build configuration list for PBXNativeTarget "Lua Tests" */;
+			buildConfigurationList = E4B6E2C11AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLua" */;
 			buildPhases = (
-				E4D6F1E81AF7A0A2005D475D /* Sources */,
-				E4D6F1E91AF7A0A2005D475D /* Frameworks */,
-				E4D6F1EA1AF7A0A2005D475D /* Resources */,
+				E4B6E2A31AF917C100CF84E6 /* Sources */,
+				E4B6E2A41AF917C100CF84E6 /* Frameworks */,
+				E4B6E2A51AF917C100CF84E6 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E4D6F1F41AF7A0A2005D475D /* PBXTargetDependency */,
+				E4B6E2D01AF91AF300CF84E6 /* PBXTargetDependency */,
 			);
-			name = "Lua Tests";
-			productName = "Lua Tests";
-			productReference = E4D6F1EC1AF7A0A2005D475D /* Lua Tests.xctest */;
+			name = HelloLua;
+			productName = HelloLua;
+			productReference = E4B6E2A71AF917C100CF84E6 /* HelloLua.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E4B6E2B81AF917C200CF84E6 /* HelloLuaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLuaTests" */;
+			buildPhases = (
+				E4B6E2B51AF917C200CF84E6 /* Sources */,
+				E4B6E2B61AF917C200CF84E6 /* Frameworks */,
+				E4B6E2B71AF917C200CF84E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E4B6E2BB1AF917C200CF84E6 /* PBXTargetDependency */,
+			);
+			name = HelloLuaTests;
+			productName = HelloLuaTests;
+			productReference = E4B6E2B91AF917C200CF84E6 /* HelloLuaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -221,8 +290,12 @@
 					E4B087901AF121CC00709590 = {
 						CreatedOnToolsVersion = 6.3.1;
 					};
-					E4D6F1EB1AF7A0A2005D475D = {
+					E4B6E2A61AF917C100CF84E6 = {
 						CreatedOnToolsVersion = 6.3.1;
+					};
+					E4B6E2B81AF917C200CF84E6 = {
+						CreatedOnToolsVersion = 6.3.1;
+						TestTargetID = E4B6E2A61AF917C100CF84E6;
 					};
 				};
 			};
@@ -232,6 +305,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 2982C06B14D3D5D10079E3AF;
 			productRefGroup = 2982C07814D3D5D10079E3AF /* Products */;
@@ -241,7 +315,8 @@
 				2982C07614D3D5D10079E3AF /* Lua */,
 				E47C38951AF4AACA009DFB82 /* ZERO */,
 				E4B087901AF121CC00709590 /* LuaJIT */,
-				E4D6F1EB1AF7A0A2005D475D /* Lua Tests */,
+				E4B6E2A61AF917C100CF84E6 /* HelloLua */,
+				E4B6E2B81AF917C200CF84E6 /* HelloLuaTests */,
 			);
 		};
 /* End PBXProject section */
@@ -255,7 +330,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4D6F1EA1AF7A0A2005D475D /* Resources */ = {
+		E4B6E2A51AF917C100CF84E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4B6E2B11AF917C100CF84E6 /* Images.xcassets in Resources */,
+				E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */,
+				E4B6E2B41AF917C100CF84E6 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4B6E2B71AF917C200CF84E6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -274,11 +359,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4D6F1E81AF7A0A2005D475D /* Sources */ = {
+		E4B6E2A31AF917C100CF84E6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4D6F1F11AF7A0A2005D475D /* Lua_Tests.m in Sources */,
+				E4B6E2CA1AF918C600CF84E6 /* main.m in Sources */,
+				E4B6E2AD1AF917C100CF84E6 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4B6E2B51AF917C200CF84E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4B6E2C01AF917C200CF84E6 /* HelloLuaTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,10 +384,15 @@
 			target = E4B087901AF121CC00709590 /* LuaJIT */;
 			targetProxy = E4B087941AF121F700709590 /* PBXContainerItemProxy */;
 		};
-		E4D6F1F41AF7A0A2005D475D /* PBXTargetDependency */ = {
+		E4B6E2BB1AF917C200CF84E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E4B6E2A61AF917C100CF84E6 /* HelloLua */;
+			targetProxy = E4B6E2BA1AF917C200CF84E6 /* PBXContainerItemProxy */;
+		};
+		E4B6E2D01AF91AF300CF84E6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2982C07614D3D5D10079E3AF /* Lua */;
-			targetProxy = E4D6F1F31AF7A0A2005D475D /* PBXContainerItemProxy */;
+			targetProxy = E4B6E2CF1AF91AF300CF84E6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -304,6 +403,14 @@
 				2982C08414D3D5D10079E3AF /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E4B6E2B21AF917C100CF84E6 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E4B6E2B31AF917C100CF84E6 /* Base */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -554,9 +661,71 @@
 			};
 			name = Release;
 		};
-		E4D6F1F51AF7A0A2005D475D /* Debug */ = {
+		E4B6E2C21AF917C200CF84E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = HelloLua/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E4B6E2C31AF917C200CF84E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = HelloLua/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-pagezero_size",
+					10000,
+					"-image_base",
+					100000000,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		E4B6E2C51AF917C200CF84E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -574,17 +743,19 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "Lua Tests/Info.plist";
+				INFOPLIST_FILE = HelloLuaTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloLua.app/Contents/MacOS/HelloLua";
 			};
 			name = Debug;
 		};
-		E4D6F1F61AF7A0A2005D475D /* Release */ = {
+		E4B6E2C61AF917C200CF84E6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -599,11 +770,12 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "Lua Tests/Info.plist";
+				INFOPLIST_FILE = HelloLuaTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HelloLua.app/Contents/MacOS/HelloLua";
 			};
 			name = Release;
 		};
@@ -646,14 +818,21 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4D6F1F71AF7A0A2005D475D /* Build configuration list for PBXNativeTarget "Lua Tests" */ = {
+		E4B6E2C11AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLua" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4D6F1F51AF7A0A2005D475D /* Debug */,
-				E4D6F1F61AF7A0A2005D475D /* Release */,
+				E4B6E2C21AF917C200CF84E6 /* Debug */,
+				E4B6E2C31AF917C200CF84E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+		};
+		E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLuaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4B6E2C51AF917C200CF84E6 /* Debug */,
+				E4B6E2C61AF917C200CF84E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
