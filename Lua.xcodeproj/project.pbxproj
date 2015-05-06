@@ -14,7 +14,7 @@
 		E4B6E2AD1AF917C100CF84E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2AC1AF917C100CF84E6 /* AppDelegate.m */; };
 		E4B6E2B11AF917C100CF84E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2B01AF917C100CF84E6 /* Images.xcassets */; };
 		E4B6E2B41AF917C100CF84E6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2B21AF917C100CF84E6 /* MainMenu.xib */; };
-		E4B6E2C01AF917C200CF84E6 /* HelloLuaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2BF1AF917C200CF84E6 /* HelloLuaTests.m */; };
+		E4B6E2C01AF917C200CF84E6 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2BF1AF917C200CF84E6 /* Tests.m */; };
 		E4B6E2CA1AF918C600CF84E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2C81AF918C600CF84E6 /* main.m */; };
 		E4B6E2CE1AF91AEF00CF84E6 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
 		E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2D11AF91BAB00CF84E6 /* test.lua */; };
@@ -59,9 +59,9 @@
 		E4B6E2AC1AF917C100CF84E6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E4B6E2B01AF917C100CF84E6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E4B6E2B31AF917C100CF84E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		E4B6E2B91AF917C200CF84E6 /* HelloLuaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HelloLuaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B6E2B91AF917C200CF84E6 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B6E2BE1AF917C200CF84E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4B6E2BF1AF917C200CF84E6 /* HelloLuaTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelloLuaTests.m; sourceTree = "<group>"; };
+		E4B6E2BF1AF917C200CF84E6 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		E4B6E2C71AF918C600CF84E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4B6E2C81AF918C600CF84E6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E4B6E2D11AF91BAB00CF84E6 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 			children = (
 				2982C08014D3D5D10079E3AF /* Lua */,
 				E4B6E2A81AF917C100CF84E6 /* HelloLua */,
-				E4B6E2BC1AF917C200CF84E6 /* HelloLuaTests */,
+				E4B6E2BC1AF917C200CF84E6 /* Tests */,
 				2982C07814D3D5D10079E3AF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,7 +112,7 @@
 			children = (
 				2982C07714D3D5D10079E3AF /* Lua.framework */,
 				E4B6E2A71AF917C100CF84E6 /* HelloLua.app */,
-				E4B6E2B91AF917C200CF84E6 /* HelloLuaTests.xctest */,
+				E4B6E2B91AF917C200CF84E6 /* Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,13 +153,13 @@
 			path = HelloLua;
 			sourceTree = "<group>";
 		};
-		E4B6E2BC1AF917C200CF84E6 /* HelloLuaTests */ = {
+		E4B6E2BC1AF917C200CF84E6 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				E4B6E2BF1AF917C200CF84E6 /* HelloLuaTests.m */,
+				E4B6E2BF1AF917C200CF84E6 /* Tests.m */,
 				E4B6E2BD1AF917C200CF84E6 /* Supporting Files */,
 			);
-			path = HelloLuaTests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		E4B6E2BD1AF917C200CF84E6 /* Supporting Files */ = {
@@ -263,9 +263,9 @@
 			productReference = E4B6E2A71AF917C100CF84E6 /* HelloLua.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E4B6E2B81AF917C200CF84E6 /* HelloLuaTests */ = {
+		E4B6E2B81AF917C200CF84E6 /* Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLuaTests" */;
+			buildConfigurationList = E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
 				E4B6E2B51AF917C200CF84E6 /* Sources */,
 				E4B6E2B61AF917C200CF84E6 /* Frameworks */,
@@ -276,9 +276,9 @@
 			dependencies = (
 				E4B6E2BB1AF917C200CF84E6 /* PBXTargetDependency */,
 			);
-			name = HelloLuaTests;
-			productName = HelloLuaTests;
-			productReference = E4B6E2B91AF917C200CF84E6 /* HelloLuaTests.xctest */;
+			name = Tests;
+			productName = Tests;
+			productReference = E4B6E2B91AF917C200CF84E6 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -318,7 +318,7 @@
 				E47C38951AF4AACA009DFB82 /* ZERO */,
 				E4B087901AF121CC00709590 /* LuaJIT */,
 				E4B6E2A61AF917C100CF84E6 /* HelloLua */,
-				E4B6E2B81AF917C200CF84E6 /* HelloLuaTests */,
+				E4B6E2B81AF917C200CF84E6 /* Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -374,7 +374,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4B6E2C01AF917C200CF84E6 /* HelloLuaTests.m in Sources */,
+				E4B6E2C01AF917C200CF84E6 /* Tests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,8 +474,6 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -739,7 +737,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = HelloLuaTests/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -765,7 +763,7 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = HelloLuaTests/Info.plist;
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -821,7 +819,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLuaTests" */ = {
+		E4B6E2C41AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B6E2C51AF917C200CF84E6 /* Debug */,
