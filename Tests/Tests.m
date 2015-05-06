@@ -1,6 +1,6 @@
 //
-//  HelloLuaTests.m
-//  HelloLuaTests
+//  Tests.m
+//  Tests
 //
 //  Created by Rhody Lugo on 5/5/15.
 //
@@ -10,11 +10,11 @@
 #import <XCTest/XCTest.h>
 #import <Lua/LuaVirtualMachine.h>
 
-@interface HelloLuaTests : XCTestCase
+@interface Tests : XCTestCase
 
 @end
 
-@implementation HelloLuaTests
+@implementation Tests
 
 - (void)setUp {
     [super setUp];
