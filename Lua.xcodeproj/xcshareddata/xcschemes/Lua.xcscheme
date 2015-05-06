@@ -28,7 +28,26 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E4B6E2B81AF917C200CF84E6"
+               BuildableName = "HelloLuaTests.xctest"
+               BlueprintName = "HelloLuaTests"
+               ReferencedContainer = "container:Lua.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2982C07614D3D5D10079E3AF"
+            BuildableName = "Lua.framework"
+            BlueprintName = "Lua"
+            ReferencedContainer = "container:Lua.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
