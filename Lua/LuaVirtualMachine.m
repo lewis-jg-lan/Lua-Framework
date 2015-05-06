@@ -175,13 +175,13 @@ static void fixglobals (lua_State *L) {
 		C = lua_newthread(L);
 
 		/* Fix globals */
-		lua_newtable(L); /* new table for globals */
-		lua_newtable(L); /* metatable for new globals */
-		lua_pushliteral(L, "__index");
-		lua_pushvalue(L, LUA_GLOBALSINDEX); /* __index tries old common globals */
-		lua_settable(L, -3);
-		lua_setmetatable(L, -2);
-		lua_replace(L, LUA_GLOBALSINDEX);
+		lua_newtable(C); /* new table for globals */
+		lua_newtable(C); /* metatable for new globals */
+		lua_pushliteral(C, "__index");
+		lua_pushvalue(C, LUA_GLOBALSINDEX); /* __index tries old common globals */
+		lua_settable(C, -3);
+		lua_setmetatable(C, -2);
+		lua_replace(C, LUA_GLOBALSINDEX);
 	}
 	return self;
 }
@@ -213,7 +213,7 @@ static void fixglobals (lua_State *L) {
 
 - (LuaValue *)objectForKeyedSubscript:(id)key {
 	if ([key isKindOfClass:[NSString class]]) {
-		lua_getglobal(self.state, [[self luaKeyWithString:key] UTF8String]);
+		lua_getglobal(C, [[self luaKeyWithString:key] UTF8String]);
 		if (!lua_isnoneornil(C, -1)) {
 			return [[LuaValue alloc] initWithTopOfStackInContext:self];
 		}
@@ -223,8 +223,8 @@ static void fixglobals (lua_State *L) {
 
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key {
 	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
-		if (lua_objc_pushpropertylist(self.state, obj)) {
-			lua_setglobal(self.state, [[self luaKeyWithString:(NSString *)key] UTF8String]);
+		if (lua_objc_pushpropertylist(C, obj)) {
+			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
 		}
 	}
 }
