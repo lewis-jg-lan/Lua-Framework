@@ -312,7 +312,7 @@ int lua_objc_open(lua_State* state){
 	luaL_register(state,lua_tostring(state,-1),lua_objc_functions);
 
 	// Add the lookup class function as fallback
-	lua_getglobal(state, "objc");
+	lua_getglobal(state, LUA_OBJC_LIBRARY_NAME);
 	lua_createtable(state, 0, 0);
 	lua_pushcfunction(state, lua_objc_lookup_class);
 	lua_setfield(state, -2, "__index");
