@@ -38,6 +38,15 @@
 	XCTAssertTrue(anotherLuaContext[@"aGlobalVariable"] == nil && self.sharedLuaContext[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
 }
 
+- (void)testLoadFramework {
+	id obj = [[self.sharedLuaContext evaluateScript:
+			   @"objc.import('AVKit')\n"
+			   @"local obj = objc.AVPlayerView:alloc():init()\n"
+			   @"return obj\n"] toObject];
+
+	XCTAssertTrue([obj class] == NSClassFromString(@"AVPlayerView"), @"Couldn't create an object from a loaded framework");
+}
+
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{
