@@ -15,6 +15,7 @@
 #pragma mark Header File Includes
 
 #import "LuaObjCBridge.h"
+#include <objc/message.h>
 #include <dlfcn.h>
 
 //
@@ -61,53 +62,6 @@
 #if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 	#define LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
 	#define LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
-#endif
-	
-//
-// Portability Configuration
-//
-
-#pragma mark Portability Configuration
-
-//
-// These definitions instruct the LuaObjCBridge to account for differences
-// between architectures (especially the quirks of the PPC) and runtimes (GNU 
-// vs. Apple/NeXT)
-//
-// To force the LuaObjCBridge to compile using far more portable calls to 
-// the FoundationKit rather than the Apple/NeXT runtime, just #define
-// LUA_OBJC_USE_FOUNDATION_INSTEAD_OF_RUNTIME. This is #defined by default if
-// the bridge is unable to identify that it is being compiled against the NeXT
-// runtime.
-//
-
-#if defined(__NEXT_RUNTIME__)
-	#import <objc/objc-runtime.h>
-	#ifdef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-		#define LUA_OBJC_NEXT_RUNTIME
-		#if defined(__ppc__)||defined(__PPC__)||defined(__powerpc__)
-			#define LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-			#define LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-			#define LUA_OBJC_POWER_ALIGNMENT
-		#elif defined(__i386__)
-			#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_4
-				#error LuaObjCBridge cannot be compiled for Intel Macs with a MacOSX deployment target of less than 10.4.
-			#elif !defined(AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER)
-				#error Compiling LuaObjCBridge for Intel Macs requires header files from MacOSX 10.3 or greater.
-			#else		
-				#warning LuaObjCBridge is not fully tested for use on Intel chips.
-				#define LUA_OBJC_METHODCALL_USE_OBJC_MSGSENDV_FPRET
-				#define LUA_OBJC_METHODCALL_RETURN_STRUCTS_DIRECTLY_LIMIT 8
-				#define LUA_OBJC_INTEL_ALIGNMENT
-			#endif
-		#else
-			#error The LuaObjCBridge is not supported on your target architecture. In fact, neither is MacOS X. How did you even see this error?
-	    #endif
-	#endif
-#else
-	#ifdef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-		#error Direct access to the runtime does not appear to be supported on this system.  Please use Foundation instead.
-	#endif
 #endif
 	
 //
@@ -289,11 +243,7 @@ int lua_objc_lookup_class(lua_State* state){
 		lua_pushcfunction(state, lua_objc_import_framework);
 	else{
 		id theClass;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		theClass=NSClassFromString([NSString stringWithUTF8String:key]);
-#else
-		theClass=objc_lookUpClass(key);
-#endif
 		if(theClass!=nil)
 			lua_objc_pushid(state,theClass);
 		else
@@ -1166,52 +1116,7 @@ void lua_objc_id_setvalues(lua_State* state,int stack_index,NSDictionary* dictio
 	goto finish;\
 	}
 	
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-	#define lua_objc_methodcall_setArgumentValue(type,value) (*((type*)argumentValue))=((type)value)
-#else
-
-typedef char(*lua_objc_char_msgSendv)(id,SEL,unsigned,marg_list);
-typedef unsigned char(*lua_objc_unsigned_char_msgSendv)(id,SEL,unsigned,marg_list);
-	
-typedef short(*lua_objc_short_msgSendv)(id,SEL,unsigned,marg_list);
-typedef unsigned short(*lua_objc_unsigned_short_msgSendv)(id,SEL,unsigned,marg_list);
-	
-typedef int(*lua_objc_int_msgSendv)(id,SEL,unsigned,marg_list);
-typedef unsigned int(*lua_objc_unsigned_int_msgSendv)(id,SEL,unsigned,marg_list);
-	
-typedef long(*lua_objc_long_msgSendv)(id,SEL,unsigned,marg_list);
-typedef unsigned long(*lua_objc_unsigned_long_msgSendv)(id,SEL,unsigned,marg_list);
-	
-typedef long long(*lua_objc_long_long_msgSendv)(id,SEL,unsigned,marg_list);
-typedef unsigned long long(*lua_objc_unsigned_long_long_msgSendv)(id,SEL,unsigned,marg_list);
-	
-typedef float(*lua_objc_float_msgSendv)(id,SEL,unsigned,marg_list);
-typedef double(*lua_objc_double_msgSendv)(id,SEL,unsigned,marg_list);
-
-typedef void*(*lua_objc_pointer_msgSendv)(id,SEL,unsigned,marg_list);
-
-	#ifdef LUA_OBJC_METHODCALL_RETURN_STRUCTS_DIRECTLY
-
-typedef struct{
-	char contents[LUA_OBJC_METHODCALL_RETURN_STRUCTS_DIRECTLY_LIMIT];
-	} lua_objc_methodcall_struct_result;
-	
-typedef lua_objc_methodcall_struct_result(*lua_objc_struct_msgSendv)(id,SEL,unsigned,marg_list);
-
-	#endif
-	#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-		#define LUA_OBJC_MARG_MAX_FLOATS 13
-
-typedef struct lua_objc_sendv_margs{
- 	double floatingPointArgs[LUA_OBJC_MARG_MAX_FLOATS];  // Limit imposed by the NeXT runtime.
- 	int ignored[14];
- 	int arguments[1];									 // Start of data manipulated by standard marg_setValue()
-	} lua_objc_sendv_margs;
-
-		#define lua_objc_marg_setFloatValue(margs,stack_index,value)	(((lua_objc_sendv_margs*)margs)->floatingPointArgs[stack_index])=(double)value
-		#define lua_objc_marg_setDoubleValue(margs,stack_index,value)	(((lua_objc_sendv_margs*)margs)->floatingPointArgs[stack_index])=value
-	#endif
-#endif
+#define lua_objc_methodcall_setArgumentValue(type,value) (*((type*)argumentValue))=((type)value)
 
 int lua_objc_methodcall(lua_State* state){
 	int argumentCount=0;
@@ -1221,9 +1126,7 @@ int lua_objc_methodcall(lua_State* state){
 	unsigned argumentSize=0;
 	char* argumentType=NULL;
 	void* argumentValue=NULL;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	NSInvocation* invocation=nil;
-#endif
 	int luaArgument=0;
 #ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
 	int luaFloatArguments=0;
@@ -1232,16 +1135,12 @@ int lua_objc_methodcall(lua_State* state){
 	int resultCount=0;
 	Method method=NULL;
 	id receiver=nil;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	unsigned resultSize=0;
-#endif
 	void* resultValue=NULL;
 	SEL selector=NULL;
 	char* selectorName=NULL;
 	int selectorNameLength=0;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	NSMethodSignature* signature=nil;
-#endif
 
 	//
 	// Get the Objective-C receiver
@@ -1272,31 +1171,17 @@ int lua_objc_methodcall(lua_State* state){
 	// Get the Objective-C selector and method
 	//
 	 
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
 	signature=[receiver methodSignatureForSelector:selector];
 	if(signature==nil){
-#else
-	selector=sel_registerName(selectorName);
-	method=class_getInstanceMethod(receiver->isa,selector);
-	if(method==nil){
-#endif
 		selectorName[stack_index]=':';
 		selectorName[stack_index+1]='\0';
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
 		signature=[receiver methodSignatureForSelector:selector];
 		}
 	if(signature==nil){
-#else
-		selector=sel_registerName(selectorName);
-		method=class_getInstanceMethod(receiver->isa,selector);
-		}
-	if(method==nil){
-#endif
 		lua_objc_methodcall_error("Reciever does not implement method.");
 		}
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 
 	//
 	// Create an NSInvocation to do the Objective-C calling for us
@@ -1308,13 +1193,11 @@ int lua_objc_methodcall(lua_State* state){
 		}
 	[invocation setSelector:selector];
 	[invocation setTarget:receiver];
-#endif
 
 	//
 	// Create space for passing method arguments between the two environments
 	//
 
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	argumentCount=[signature numberOfArguments];
 	argumentSize=[signature frameLength];
 	argumentValue=malloc(argumentSize);
@@ -1322,26 +1205,13 @@ int lua_objc_methodcall(lua_State* state){
 		lua_objc_methodcall_error("Unable to allocate method argument conversion buffer.");		
 		}
 	bzero(argumentValue,argumentSize);
-#else
-	argumentCount=method_getNumberOfArguments(method);
-	argumentSize=method_getSizeOfArguments(method);
-	marg_malloc(argumentList,method);
-	if(!argumentList){
-		lua_objc_methodcall_error("Unable to allocate method argument buffer.");
-		}
-	bzero(argumentList,argumentSize);
-#endif
 
 	//
 	// Convert Lua arguments to Objective-C arguments
 	//
 
 	for(argumentIndex=2,luaArgument=2;argumentIndex<argumentCount;argumentIndex++,luaArgument++){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		argumentType=(char*)[signature getArgumentTypeAtIndex:argumentIndex];
-#else
-		method_getArgumentInfo(method,argumentIndex,(const char**)(&argumentType),&argumentOffset);
-#endif
 		switch(*argumentType){
 		
 			//
@@ -1356,7 +1226,7 @@ int lua_objc_methodcall(lua_State* state){
 			case LUA_OBJC_TYPE_CONST:
 			case LUA_OBJC_TYPE_ONEWAY:
 				assert(0);
-				continue;
+				break;
 				
 			//
 			// Convert each parameter from Lua to Objective-C
@@ -1364,15 +1234,7 @@ int lua_objc_methodcall(lua_State* state){
 			
 			case LUA_OBJC_TYPE_C99_BOOL:{
 				if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(_Bool,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_toboolean(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,_Bool,(_Bool)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to a C99 _Bool).");
@@ -1381,26 +1243,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_CHAR:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(char,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_tonumber(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,char,(char)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(char,lua_toboolean(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_toboolean(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,char,(char)lua_toboolean(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to char).");
@@ -1409,26 +1255,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_CHAR:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned char,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,unsigned int,(unsigned int)lua_tonumber(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,unsigned char,(unsigned char)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned char,lua_toboolean(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,unsigned int,(unsigned int)lua_toboolean(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,unsigned char,(unsigned char)lua_toboolean(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to unsigned char).");
@@ -1440,26 +1270,10 @@ int lua_objc_methodcall(lua_State* state){
 				double value;
 #endif
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(double,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-					value=(double)lua_tonumber(state,luaArgument);
-	#else
-					marg_setValue(argumentList,argumentOffset,double,(double)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(double,lua_toboolean(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-					value=(double)lua_toboolean(state,luaArgument);
-	#else
-					marg_setValue(argumentList,argumentOffset,double,(double)lua_toboolean(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to double).");
@@ -1479,26 +1293,10 @@ int lua_objc_methodcall(lua_State* state){
 				float value;
 #endif
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(float,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-					value=(float)lua_tonumber(state,luaArgument);
-	#else
-					marg_setValue(argumentList,argumentOffset,float,(float)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(float,lua_toboolean(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-					value=(float)lua_toboolean(state,luaArgument);
-	#else
-					marg_setValue(argumentList,argumentOffset,float,(float)lua_toboolean(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to float).");
@@ -1515,18 +1313,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_INT:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(int,lua_tonumber(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_tonumber(state,luaArgument));
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(int,lua_toboolean(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_toboolean(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to int).");
@@ -1535,18 +1325,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_INT:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned int,lua_tonumber(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,unsigned int,(unsigned int)lua_tonumber(state,luaArgument));
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned int,lua_toboolean(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,unsigned int,(unsigned int)lua_toboolean(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to unsigned int).");
@@ -1555,18 +1337,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_LONG:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(long,lua_tonumber(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,long,(long)lua_tonumber(state,luaArgument));
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(long,lua_toboolean(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,long,(long)lua_toboolean(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to long).");
@@ -1575,18 +1349,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_LONG:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned long,lua_tonumber(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,unsigned long,(unsigned long)lua_tonumber(state,luaArgument));
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned long,lua_toboolean(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,unsigned long,(unsigned long)lua_toboolean(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to unsigned long).");
@@ -1595,18 +1361,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_LONG_LONG:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(long long,lua_tonumber(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,long long,(long long)lua_tonumber(state,luaArgument));
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(long long,lua_toboolean(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,long long,(long long)lua_toboolean(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to long long).");
@@ -1615,18 +1373,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_LONG_LONG:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned long long,lua_tonumber(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,unsigned long long,(unsigned long long)lua_tonumber(state,luaArgument));
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned long long,lua_toboolean(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,unsigned long long,(unsigned long long)lua_toboolean(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to unsigned long long).");
@@ -1635,26 +1385,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_SHORT:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(short,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_tonumber(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,short,(short)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(short,lua_toboolean(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_toboolean(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,short,(short)lua_toboolean(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to short).");
@@ -1663,26 +1397,10 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_SHORT:{
 				if(lua_isnumber(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned short,lua_tonumber(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,unsigned int,(unsigned int)lua_tonumber(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,unsigned short,(unsigned short)lua_tonumber(state,luaArgument));
-	#endif
-#endif
 					}
 				else if(lua_isboolean(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(unsigned short,lua_toboolean(state,luaArgument));
-#else
-	#ifdef LUA_OBJC_METHODCALL_INT_IS_SHORTEST_INTEGRAL_TYPE
-					marg_setValue(argumentList,argumentOffset,int,(int)lua_toboolean(state,luaArgument));
-	#else
-					marg_setValue(argumentList,argumentOffset,unsigned short,(unsigned short)lua_toboolean(state,luaArgument));
-	#endif
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to unsigned short).");
@@ -1691,11 +1409,7 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_STRING:{
 				if(lua_isstring(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(const char*,lua_tostring(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,const char*,lua_tostring(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to char*).");
@@ -1704,35 +1418,19 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_ID:{
 				if(lua_isnil(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(id,nil);
-#else
-					marg_setValue(argumentList,argumentOffset,id,nil);
-#endif
 					}
 				else if(lua_objc_isid(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(id,lua_objc_toid(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,id,lua_objc_toid(state,luaArgument));
-#endif
 					}
 				else{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(id,lua_objc_topropertylist(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,id,lua_objc_topropertylist(state,luaArgument));
-#endif
 					}
 				break;
 				}
 			case LUA_OBJC_TYPE_CLASS:{
 				if(lua_objc_isid(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(Class,lua_objc_toid(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,Class,lua_objc_toid(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting an Objective-C Class).");
@@ -1742,20 +1440,11 @@ int lua_objc_methodcall(lua_State* state){
 			case LUA_OBJC_TYPE_SELECTOR:{
 				if(lua_isstring(state,luaArgument)){
 					SEL value;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					value=NSSelectorFromString([NSString stringWithUTF8String:(lua_tostring(state,luaArgument))]);
 					lua_objc_methodcall_setArgumentValue(SEL,value);
-#else
-					value=sel_registerName(lua_tostring(state,luaArgument));
-					marg_setValue(argumentList,argumentOffset,SEL,value);
-#endif
 					}
 				else if(lua_isuserdata(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(SEL,lua_touserdata(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,SEL,lua_touserdata(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting an Objective-C SEL).");
@@ -1764,18 +1453,13 @@ int lua_objc_methodcall(lua_State* state){
 				}
 			case LUA_OBJC_TYPE_POINTER:{
 				if(lua_isuserdata(state,luaArgument)){
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 					lua_objc_methodcall_setArgumentValue(void*,lua_touserdata(state,luaArgument));
-#else
-					marg_setValue(argumentList,argumentOffset,void*,lua_touserdata(state,luaArgument));
-#endif
 					}
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting a void*).");
 					}
 				break;
 				}
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 			case LUA_OBJC_TYPE_ARRAY:
 			case LUA_OBJC_TYPE_STRUCT:{
 				memcpy(argumentValue,lua_touserdata(state,luaArgument),argumentSize);				
@@ -1789,14 +1473,6 @@ int lua_objc_methodcall(lua_State* state){
 				 
 				lua_objc_methodcall_error("Unsupported type for method argument (union).");
 				}
-#else
-			case LUA_OBJC_TYPE_ARRAY:
-			case LUA_OBJC_TYPE_STRUCT:
-			case LUA_OBJC_TYPE_UNION:{
-				memcpy(marg_getRef(argumentList,argumentOffset,void),lua_touserdata(state,luaArgument),lua_objc_type_size(&argumentType));				
-				break;
-				}
-#endif
 			case LUA_OBJC_TYPE_BITFIELD:{
 				lua_objc_methodcall_error("Unsupported type for method argument (bitfield).");
 				}
@@ -1808,16 +1484,13 @@ int lua_objc_methodcall(lua_State* state){
 				lua_objc_methodcall_error("Unknown type for method argument.");
 				}
 			}
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		[invocation setArgument:argumentValue atIndex:argumentIndex];
-#endif
 		}
 
 	//
 	// Send the Objective-C message, pass the resultValue to Lua
 	//
 	 
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	[invocation invoke];
 	if(*[signature methodReturnType]!=LUA_OBJC_TYPE_VOID){
 		resultSize=[signature methodReturnLength];
@@ -1828,7 +1501,6 @@ int lua_objc_methodcall(lua_State* state){
 		bzero(resultValue,resultSize);
 		[invocation getReturnValue:resultValue];
 		}
-#endif
 
 	resultCount=-1;
 	while(resultCount==-1){
@@ -1836,11 +1508,7 @@ int lua_objc_methodcall(lua_State* state){
 		//
 		// Ignore modifiers used for distributed objects
 		//
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		const char *type = [signature methodReturnType];
-#else
-		const char *type = method->method_types;
-#endif
 		int pos = 0;
 		if (type[0] == LUA_OBJC_TYPE_IN
 			|| type[0] == LUA_OBJC_TYPE_INOUT
@@ -1852,6 +1520,10 @@ int lua_objc_methodcall(lua_State* state){
 			pos++;
 
 		switch(type[pos]){
+
+			//
+			// Skip over modifiers for distributed objects
+			//
 
 			case LUA_OBJC_TYPE_IN:
 			case LUA_OBJC_TYPE_INOUT:
@@ -1871,190 +1543,88 @@ int lua_objc_methodcall(lua_State* state){
 				lua_objc_methodcall_error("Unsupported return type for method (bitfield).");
 				}
 			case LUA_OBJC_TYPE_C99_BOOL:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushboolean(state,(_Bool)(*((_Bool*)resultValue)));
-#else
-				lua_pushboolean(state,(_Bool)((lua_objc_char_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_CHAR:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(char)(*((char*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_char_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_CHAR:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(unsigned char)(*((unsigned char*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_unsigned_char_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_DOUBLE:
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(lua_Number)(*((double*)resultValue)));
-#else
-	#ifdef LUA_OBJC_METHODCALL_USE_OBJC_MSGSENDV_FPRET
-				lua_pushnumber(state,(lua_Number)((lua_objc_double_msgSendv)objc_msgSendv_fpret)(receiver,selector,argumentSize,argumentList));
-	#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_double_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-	#endif
-#endif
 				break;
 			case LUA_OBJC_TYPE_FLOAT:
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(lua_Number)(*((float*)resultValue)));
-#else
-	#ifdef LUA_OBJC_METHODCALL_USE_OBJC_MSGSENDV_FPRET
-				lua_pushnumber(state,(lua_Number)((lua_objc_float_msgSendv)objc_msgSendv_fpret)(receiver,selector,argumentSize,argumentList));
-	#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_float_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-	#endif
-#endif
 				break;
 			case LUA_OBJC_TYPE_INT:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(int)(*((int*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_int_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_INT:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(unsigned int)(*((unsigned int*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_unsigned_int_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_LONG:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(long)(*((long*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_long_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_LONG:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(unsigned long)(*((unsigned long*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_unsigned_long_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_LONG_LONG:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(long long)(*((long long*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_long_long_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_LONG_LONG:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(unsigned long long)(*((unsigned long long*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_unsigned_long_long_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_SHORT:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(short)(*((short*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_short_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_UNSIGNED_SHORT:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushnumber(state,(unsigned short)(*((unsigned short*)resultValue)));
-#else
-				lua_pushnumber(state,(lua_Number)((lua_objc_unsigned_short_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_VOID:
-#ifdef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
-				objc_msgSendv(receiver,selector,argumentSize,argumentList);
-#endif
 				resultCount=0;
 				break;
 			case LUA_OBJC_TYPE_STRING:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushstring(state,(char*)(*((char**)resultValue)));
-#else
-				lua_pushstring(state,((lua_objc_pointer_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_ID:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				if(!(lua_objc_pushpropertylist(state,(id)(*((id*)resultValue))))){
 					lua_objc_pushid(state,(id)(*((id*)resultValue)));
 					}
-#else
-				resultValue=objc_msgSendv(receiver,selector,argumentSize,argumentList);
-				if(!(lua_objc_pushpropertylist(state,resultValue)))
-					lua_objc_pushid(state,resultValue);
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_CLASS:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_objc_pushid(state,(id)(*((id*)resultValue)));
-#else
-				lua_objc_pushid(state,objc_msgSendv(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_SELECTOR:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushstring(state,[NSStringFromSelector((SEL)(*((SEL*)resultValue))) UTF8String]);
-#else
-				lua_pushstring(state,sel_getName(((lua_objc_pointer_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList)));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_POINTER:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				lua_pushlightuserdata(state,(id)(*((void**)resultValue)));
-#else
-				lua_pushlightuserdata(state,((lua_objc_pointer_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList));
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_ARRAY:
 			case LUA_OBJC_TYPE_STRUCT:
 			case LUA_OBJC_TYPE_UNION:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 				void* temp=lua_newuserdata(state,resultSize);
 				if(temp==NULL){
 					lua_objc_methodcall_error("Unable to allocate enough space on Lua stack to pass result.");
 					}
 				memcpy(temp,resultValue,resultSize);
-#else
-				char* resultType=method->method_types;
-				int resultSize=lua_objc_type_size(&resultType);
-				resultValue=lua_newuserdata(state,resultSize);
-				bzero(resultValue,resultSize);
-	#ifdef LUA_OBJC_METHODCALL_RETURN_STRUCTS_DIRECTLY
-				if(resultSize<LUA_OBJC_METHODCALL_RETURN_STRUCTS_DIRECTLY_LIMIT){
-					*((lua_objc_methodcall_struct_result*)resultValue)=((lua_objc_struct_msgSendv)objc_msgSendv)(receiver,selector,argumentSize,argumentList);
-					}
-				else{
-					objc_msgSendv_stret(resultValue,receiver,selector,argumentSize,argumentList);
-					}
-	#else
-				objc_msgSendv_stret(resultValue,receiver,selector,argumentSize,argumentList);
-	#endif
-#endif
 				break;
 				}
 			case LUA_OBJC_TYPE_UNKNOWN:
@@ -2072,20 +1642,12 @@ int lua_objc_methodcall(lua_State* state){
 	//
 		
 	finish:{
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		if(argumentValue){
 			free(argumentValue);
 			}
-#else
-		if(argumentList){
-			marg_free(argumentList);
-			}
-#endif
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 		if(resultValue){
 			free(resultValue);
 			}
-#endif
 		if(selectorName){
 			free(selectorName);
 			}
@@ -2185,176 +1747,7 @@ int lua_objc_methodlookup(lua_State* state){
  
 unsigned lua_objc_type_alignment(char** type_encoding){
 	int result=-1;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,NULL,(unsigned*)&result);
-#else
-	char* type=*type_encoding;
-	while(result<0){
-		char this=*type;
-		type++;
-		switch(this){
-		
-			//
-			// Ignore Objective-C type modifiers (used for distributed objects)
-			//
-
-			case LUA_OBJC_TYPE_IN:
-			case LUA_OBJC_TYPE_INOUT:
-			case LUA_OBJC_TYPE_OUT:
-			case LUA_OBJC_TYPE_BYCOPY:
-			case LUA_OBJC_TYPE_BYREF:
-			case LUA_OBJC_TYPE_CONST:
-			case LUA_OBJC_TYPE_ONEWAY:
-				assert(0);
-				continue;
-				
-			//
-			// Standard Objective-C types
-			//
-			
-			case LUA_OBJC_TYPE_ID:
-				result=__alignof__(id);
-				break;
-			case LUA_OBJC_TYPE_CLASS:
-				result=__alignof__(Class);
-				break;
-			case LUA_OBJC_TYPE_POINTER:
-				result=__alignof__(void*);
-				lua_objc_type_alignment(&type);
-				break;
-			case LUA_OBJC_TYPE_STRING:
-				result=__alignof__(char*);
-				break;
-			case LUA_OBJC_TYPE_SELECTOR:
-				result=__alignof__(SEL);
-				break;
-
-			//
-			// Standard C types
-			//
-
-			case LUA_OBJC_TYPE_C99_BOOL:
-				result=__alignof__(_Bool);
-				break;
-			case LUA_OBJC_TYPE_CHAR:
-				result=__alignof__(char);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_CHAR:
-				result=__alignof__(unsigned char);
-				break;
-			case LUA_OBJC_TYPE_DOUBLE:
-				result=__alignof__(double);
-				break;
-			case LUA_OBJC_TYPE_FLOAT:
-				result=__alignof__(float);
-				break;
-			case LUA_OBJC_TYPE_INT:
-				result=__alignof__(int);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_INT:
-				result=__alignof__(unsigned int);
-				break;
-			case LUA_OBJC_TYPE_LONG:
-				result=__alignof__(long);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_LONG:
-				result=__alignof__(unsigned long);
-				break;
-			case LUA_OBJC_TYPE_LONG_LONG:
-				result=__alignof__(long long);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_LONG_LONG:
-				result=__alignof__(unsigned long long);
-				break;
-			case LUA_OBJC_TYPE_SHORT:
-				result=__alignof__(short);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_SHORT:
-				result=__alignof__(unsigned short);
-				break;
-			case LUA_OBJC_TYPE_VOID:
-			
-				//
-				// __alignof__(void) has no meaning
-				//
-				
-				result=0;
-				break;
-				
-			//
-			// Complex C types
-			//
-		
-			case LUA_OBJC_TYPE_BITFIELD:{
-	#ifdef LUA_OBJC_NEXT_RUNTIME
-			
-				//
-				// Assume it's an int, because NeXT-style type encodings don't store a bitfield's type.
-				//
-				 			
-				result=__alignof__(int);
-				lua_objc_type_skip_number(type);
-	#else
-				lua_objc_type_skip_number(type);
-				result=lua_objc_type_alignment(&type);
-				lua_objc_type_skip_number(type);
-	#endif
-				break;
-				}
-			case LUA_OBJC_TYPE_UNION:{
-				lua_objc_type_skip_name(type);
-				if(*type){
-					while((*type)&&(*type!=LUA_OBJC_TYPE_UNION_END)){
-						unsigned alignment=lua_objc_type_alignment(&type);
-						if(alignment>result)
-							result=alignment;
-						}
-					lua_objc_type_skip_past_char(type,LUA_OBJC_TYPE_UNION_END);
-					}
-				break;
-				}
-			case LUA_OBJC_TYPE_ARRAY:{
-				lua_objc_type_skip_number(type);
-				if(*type){
-					unsigned alignment=lua_objc_type_alignment(&type);
-					lua_objc_type_skip_past_char(type,LUA_OBJC_TYPE_ARRAY_END);
-					result=alignment;
-					}
-	#ifdef LUA_OBJC_POWER_ALIGNMENT
-				if(result<4)
-					result=4;
-	#endif
-				break;
-				}
-			case LUA_OBJC_TYPE_STRUCT:{
-				lua_objc_type_skip_name(type);
-				if(*type){
-					while((*type)&&(*type!=LUA_OBJC_TYPE_STRUCT_END)){
-						unsigned alignment=lua_objc_type_alignment(&type);
-						if(alignment>result)
-							result=alignment;
-						}
-					lua_objc_type_skip_past_char(type,LUA_OBJC_TYPE_STRUCT_END);
-					}
-	#ifdef LUA_OBJC_POWER_ALIGNMENT
-				if(result<4)
-					result=4;
-	#endif
-				break;
-				}
-			case LUA_OBJC_TYPE_UNKNOWN:
-			default:
-				result=0;
-			}
-			
-		//
-		// Skip any stack offset information for this type
-		//
-			
-		lua_objc_type_skip_number(type);
-		}
-	*type_encoding=(result?type:nil);
-#endif
 	return result;
 	}
 	
@@ -2372,199 +1765,6 @@ unsigned lua_objc_type_alignment(char** type_encoding){
 
 unsigned lua_objc_type_size(char** type_encoding){
 	int result=-1;
-#ifndef LUA_OBJC_USE_RUNTIME_INSTEAD_OF_FOUNDATION
 	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,(unsigned*)&result,NULL);
-#else
-	char* type=*type_encoding;
-	while(result<0){
-		char this=*type;
-		type++;
-		switch(this){
-		
-			//
-			// Ignore Objective-C type modifiers (used for distributed objects)
-			//
-			 
-			case LUA_OBJC_TYPE_IN:
-			case LUA_OBJC_TYPE_INOUT:
-			case LUA_OBJC_TYPE_OUT:
-			case LUA_OBJC_TYPE_BYCOPY:
-			case LUA_OBJC_TYPE_BYREF:
-			case LUA_OBJC_TYPE_CONST:
-			case LUA_OBJC_TYPE_ONEWAY:
-				assert(0);
-				continue;
-				
-			//
-			// Standard Objective-C types
-			//
-				
-			case LUA_OBJC_TYPE_ID:
-				result=sizeof(id);
-				break;
-			case LUA_OBJC_TYPE_CLASS:
-				result=sizeof(Class);
-				break;
-			case LUA_OBJC_TYPE_POINTER:
-				result=sizeof(void*);
-				lua_objc_type_size(&type);
-				break;
-			case LUA_OBJC_TYPE_STRING:
-				result=sizeof(char*);
-				break;
-			case LUA_OBJC_TYPE_SELECTOR:
-				result=sizeof(SEL);
-				break;
-
-			//
-			// Standard C types
-			//
-
-			case LUA_OBJC_TYPE_C99_BOOL:
-				result=sizeof(_Bool);
-				break;
-			case LUA_OBJC_TYPE_CHAR:
-				result=sizeof(char);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_CHAR:
-				result=sizeof(unsigned char);
-				break;
-			case LUA_OBJC_TYPE_DOUBLE:
-				result=sizeof(double);
-				break;
-			case LUA_OBJC_TYPE_FLOAT:
-				result=sizeof(float);
-				break;
-			case LUA_OBJC_TYPE_INT:
-				result=sizeof(int);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_INT:
-				result=sizeof(unsigned int);
-				break;
-			case LUA_OBJC_TYPE_LONG:
-				result=sizeof(long);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_LONG:
-				result=sizeof(unsigned long);
-				break;
-			case LUA_OBJC_TYPE_LONG_LONG:
-				result=sizeof(long long);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_LONG_LONG:
-				result=sizeof(unsigned long long);
-				break;
-			case LUA_OBJC_TYPE_SHORT:
-				result=sizeof(short);
-				break;
-			case LUA_OBJC_TYPE_UNSIGNED_SHORT:
-				result=sizeof(unsigned short);
-				break;
-			case LUA_OBJC_TYPE_VOID:
-				result=0; 
-				break;
-				
-			//
-			// Complex C types
-			//
-			
-			case LUA_OBJC_TYPE_BITFIELD:{
-	#ifdef LUA_OBJC_NEXT_RUNTIME
-			
-				//
-				// Assume it's an int, because NeXT-style type encodings don't record a bitfield's type.
-				//
-			
-				result=sizeof(int);
-				lua_objc_type_skip_number(type);
-	#else
-				lua_objc_type_skip_number(type);
-				result=lua_objc_type_size(&type);
-				lua_objc_type_skip_number(type);
-	#endif				
-				break;
-				}
-			case LUA_OBJC_TYPE_UNION:{
-				lua_objc_type_skip_name(type);
-				if(*type){
-					while((*type)&&(*type!=LUA_OBJC_TYPE_UNION_END)){
-						unsigned size=lua_objc_type_size(&type);
-						if(size>result)
-							result=size;
-						}
-					lua_objc_type_skip_past_char(type,LUA_OBJC_TYPE_UNION_END);
-					}
-				break;
-				}
-			case LUA_OBJC_TYPE_ARRAY:{
-				unsigned count=0;
-				while((*type)&&((*type)>='0')&&((*type)<='9')){
-					count=((*type)-'0')+(count*10);
-					type++;
-					}
-				if(*type){
-					result=count*lua_objc_type_size(&type);
-					lua_objc_type_skip_past_char(type,LUA_OBJC_TYPE_ARRAY_END);
-					}
-				else
-					result=0;
-				break;
-				}
-			case LUA_OBJC_TYPE_STRUCT:{
-				unsigned max_alignment=0;
-				unsigned padding;
-				char* temp;
-				unsigned this_alignment;
-				lua_objc_type_skip_name(type);
-				if(*type){
-					while((*type)&&(*type!=LUA_OBJC_TYPE_STRUCT_END)){
-						temp=type;
-						this_alignment=lua_objc_type_alignment(&temp);
-							
-						//
-						// Max alignment boundary is 4 bytes (32 bit)
-						//
-						
-						if(this_alignment>4)
-							this_alignment=4;
-						if(this_alignment>max_alignment)
-							max_alignment=this_alignment;
-							
-						//
-						// Calculate padding to ensure this member is properly aligned
-						//
-						
-						if(result&(this_alignment-1))
-							padding=this_alignment-((result&(this_alignment-1)));
-						else
-							padding=0;
-						result=result+lua_objc_type_size(&type)+padding;
-						}
-						
-					//
-					// Pad struct to even multiple of largest member
-					//	
-						
-					if(result&(max_alignment-1))
-						padding=max_alignment-((result&(max_alignment-1)));
-					else
-						padding=0;
-					result=result+padding;
-					lua_objc_type_skip_past_char(type,LUA_OBJC_TYPE_STRUCT_END);
-					}
-				break;
-				}
-			case LUA_OBJC_TYPE_UNKNOWN:
-			default:
-				result=0;
-			}
-			
-		//
-		// Skip any stack offset information for this type
-		//
-			
-		lua_objc_type_skip_number(type);
-		}
-	*type_encoding=(result?type:nil);
-#endif
 	return result;
 	}
