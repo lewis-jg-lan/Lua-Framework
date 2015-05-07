@@ -50,7 +50,10 @@
 @interface LuaValue : NSObject
 @property (readonly, strong) LuaContext *context;
 + (instancetype)valueWithObject:(id)value inContext:(LuaContext *)context;
++ (instancetype)valueWithBool:(BOOL)value inContext:(LuaContext *)context;
++ (instancetype)valueWithDouble:(double)value inContext:(LuaContext *)context;
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context;
++ (instancetype)valueWithUInt32:(uint32_t)value inContext:(LuaContext *)context;
 - (id)toObject;
 - (BOOL)toBool;
 - (double)toDouble;
