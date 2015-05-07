@@ -1851,8 +1851,17 @@ int lua_objc_methodcall(lua_State* state){
 			|| type[0] == LUA_OBJC_TYPE_ONEWAY)
 			pos++;
 
-
 		switch(type[pos]){
+
+			case LUA_OBJC_TYPE_IN:
+			case LUA_OBJC_TYPE_INOUT:
+			case LUA_OBJC_TYPE_OUT:
+			case LUA_OBJC_TYPE_BYCOPY:
+			case LUA_OBJC_TYPE_BYREF:
+			case LUA_OBJC_TYPE_CONST:
+			case LUA_OBJC_TYPE_ONEWAY:
+				assert(0);
+				break;
 
 			//
 			// Return method result to Lua

@@ -159,6 +159,7 @@ static void fixglobals (lua_State *L) {
 
 @interface LuaValue ()
 - (instancetype)initWithTopOfStackInContext:(LuaContext *)context;
+- (int)index;
 @end
 
 @implementation LuaContext {
@@ -224,7 +225,10 @@ static void fixglobals (lua_State *L) {
 
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key {
 	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
-		if (lua_objc_pushpropertylist(C, obj)) {
+		if ([obj isKindOfClass:[LuaValue class]]) {
+			lua_rawgeti(self.state, LUA_REGISTRYINDEX, [(LuaValue *)obj index]);
+			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
+		} else if (lua_objc_pushpropertylist(C, obj)) {
 			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
 		}
 	}
@@ -280,6 +284,30 @@ static void fixglobals (lua_State *L) {
 	return [[self alloc] initWithObject:value inContext:context];
 }
 
+- (instancetype)initWithBool:(BOOL)value inContext:(LuaContext *)context {
+	if (self = [self initWithContext:context]) {
+		lua_pushboolean(_context.state, value);
+		[self storeTopOfStack];
+	}
+	return self;
+}
+
++ (instancetype)valueWithBool:(BOOL)value inContext:(LuaContext *)context {
+	return [[self alloc] initWithBool:value inContext:context];
+}
+
+- (instancetype)initWithDouble:(double)value inContext:(LuaContext *)context {
+	if (self = [self initWithContext:context]) {
+		lua_pushnumber(_context.state, value);
+		[self storeTopOfStack];
+	}
+	return self;
+}
+
++ (instancetype)valueWithDouble:(double)value inContext:(LuaContext *)context {
+	return [[self alloc] initWithDouble:value inContext:context];
+}
+
 - (instancetype)initWithInt32:(int32_t)value inContext:(LuaContext *)context {
 	if (self = [self initWithContext:context]) {
 		lua_pushinteger(_context.state, value);
@@ -290,6 +318,18 @@ static void fixglobals (lua_State *L) {
 
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context {
 	return [[self alloc] initWithInt32:value inContext:context];
+}
+
+- (instancetype)initWithUInt32:(uint32_t)value inContext:(LuaContext *)context {
+	if (self = [self initWithContext:context]) {
+		lua_pushinteger(_context.state, value);
+		[self storeTopOfStack];
+	}
+	return self;
+}
+
++ (instancetype)valueWithUInt32:(uint32_t)value inContext:(LuaContext *)context {
+	return [[self alloc] initWithUInt32:value inContext:context];
 }
 
 - (id)toObject {
@@ -422,6 +462,10 @@ static void fixglobals (lua_State *L) {
 	}
 
 	return nil;
+}
+
+- (int)index {
+	return _index;
 }
 
 - (void)dealloc {
