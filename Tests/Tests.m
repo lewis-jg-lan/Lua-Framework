@@ -29,22 +29,42 @@
 }
 
 - (void)testMultipleLuaContexts {
-	LuaContext *anotherLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
+	[self.sharedLuaContext evaluateScript:
+	 @"if not aGlobalVariable then\n"
+	 @"  local aLocalVariable = 'the value'\n"
+	 @"  aGlobalVariable = aLocalVariable\n"
+	 @"end\n"
+	 ];
 
-	XCTAssertNotNil(anotherLuaContext, @"Couldn't initialize another context");
+	XCTAssertNil(self.sharedLuaContext[@"aLocalVariable"], @"A local variable SHOULD NOT be available from a global context");
+
+	XCTAssertTrue([[self.sharedLuaContext[@"aGlobalVariable"] toObject] isEqualToString:@"the value"], @"A global variable SHOULD be available from a global context");
+
+	LuaContext *anotherLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
+	XCTAssertNotNil(anotherLuaContext, @"Couldn't initialize a separate global context");
 
 	[anotherLuaContext evaluateScript:@"aGlobalVariableInAnotherContext = 'value in other context'"];
 
 	XCTAssertTrue(anotherLuaContext[@"aGlobalVariable"] == nil && self.sharedLuaContext[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
 }
 
-- (void)testLoadFramework {
+- (void)testLoadingFrameworksInMultipleContexts {
 	id obj = [[self.sharedLuaContext evaluateScript:
 			   @"objc.import('AVKit')\n"
 			   @"local obj = objc.AVPlayerView:alloc():init()\n"
 			   @"return obj\n"] toObject];
 
 	XCTAssertTrue([obj class] == NSClassFromString(@"AVPlayerView"), @"Couldn't create an object from a loaded framework");
+
+	LuaContext *anotherLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
+	XCTAssertNotNil(anotherLuaContext, @"Couldn't initialize a separate global context");
+
+	obj = [[anotherLuaContext evaluateScript:
+			@"objc.import('SpriteKit')\n"
+			@"local obj = objc.SKNode:alloc():init()\n"
+			@"return obj\n"] toObject];
+
+	XCTAssertTrue([obj class] == NSClassFromString(@"SKNode"), @"Couldn't create an object from a loaded framework in a separate context");
 }
 
 - (void)testRetrievingValues {
@@ -135,17 +155,6 @@
 	if (!sharedLuaContext) {
 		sharedLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
 		XCTAssertNotNil(sharedLuaContext, @"Couldn't initialize the Lua context");
-
-		[self.sharedLuaContext evaluateScript:
-		 @"if not aGlobalVariable then\n"
-		 @"  local aLocalVariable = 'the value'\n"
-		 @"  aGlobalVariable = aLocalVariable\n"
-		 @"end\n"
-		 ];
-
-		XCTAssertNil(self.sharedLuaContext[@"aLocalVariable"], @"A local variable SHOULD NOT be available from the global context");
-
-		XCTAssertTrue([[self.sharedLuaContext[@"aGlobalVariable"] toObject] isEqualToString:@"the value"], @"A global variable SHOULD be available from the global context");
 	}
 	return sharedLuaContext;
 }
