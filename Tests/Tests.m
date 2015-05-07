@@ -62,7 +62,7 @@
 
 						 @"year2000InEpochTime = 946684800\n"
 
-						 @"aTable = {color='blue', number=2}\n"
+						 @"aTable = {color='blue', number=2, subtable={int=anIntNumber, float=aFloatNumber}}\n"
 
 						 @"return anIntNumber + aFloatNumber\n"] toObject];
 
@@ -102,6 +102,16 @@
 
 	XCTAssertEqualWithAccuracy([[self.sharedLuaContext[@"year2000InEpochTime"] toDate] timeIntervalSinceReferenceDate],
 							   [[[NSCalendar currentCalendar] dateFromComponents:comps] timeIntervalSinceReferenceDate], 60*60*24);
+
+	NSDictionary *table = [self.sharedLuaContext[@"aTable"] toObject];
+	XCTAssertNotNil(table, @"Could't retrieve a table");
+	XCTAssertTrue([table[@"color"] isEqualToString:@"blue"]);
+	XCTAssertTrue([table[@"number"] isEqual:@(2)]);
+	XCTAssertTrue([table[@"subtable"] isKindOfClass:[NSDictionary class]]);
+	NSDictionary *subTable = table[@"subtable"];
+	XCTAssertTrue([subTable isKindOfClass:[NSDictionary class]]);
+	XCTAssertTrue([subTable[@"int"] isEqual:@(55)]);
+	XCTAssertTrue([subTable[@"float"] isEqual: @(25.33)]);
 }
 
 - (void)testPerformanceExample {

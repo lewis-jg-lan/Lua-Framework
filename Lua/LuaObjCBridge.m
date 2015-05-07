@@ -1000,11 +1000,45 @@ id lua_objc_topropertylist(lua_State* state,int stack_index){
 					result=[NSMutableDictionary dictionaryWithObjects:values forKeys:keys];
 					}
 				}
-			else
+			else if (!original) {
+
+				//
+				// Convert table to dictionary recursivelly
+				//
+
+				NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+				// Push another reference to the table on top of the stack (so we know
+				// where it is, and this function can work for negative, positive and
+				// pseudo indices
+				lua_pushvalue(state,stack_index);
+				// stack now contains: -1 => table
+				lua_pushnil(state);
+				// stack now contains: -1 => nil; -2 => table
+				while (lua_next(state,-2)){
+					// stack now contains: -1 => value; -2 => key; -3 => table
+					// copy the key so that lua_tostring does not modify the original
+					lua_pushvalue(state,-2);
+					// stack now contains: -1 => key; -2 => value; -3 => key; -4 => table
+					const char *key = lua_tostring(state,-1);
+					id value = lua_objc_topropertylist(state,-2);
+					[dictionary setObject:value forKey:[NSString stringWithUTF8String:key]];
+					// pop value + copy of key, leaving original key
+					lua_pop(state,2);
+					// stack now contains: -1 => key; -2 => table
+					}
+				// stack now contains: -1 => table (when lua_next returns 0 it pops the key
+				// but does not push anything.)
+				// Pop table
+				lua_pop(state,1);
+				// Stack is now the same as it was on entry to this function
+				result=dictionary;
+				}
+			else {
 				result=original;
+				}
 			break;
 			}
-	
+
 		//
 		// All other Lua types are treated as Null values
 		//
