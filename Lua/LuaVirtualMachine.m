@@ -25,6 +25,7 @@
 
 #import "LuaVirtualMachine.h"
 #import "LuaObjCBridge.h"
+#include <objc/runtime.h>
 
 #define STR(s) #s
 
@@ -298,11 +299,87 @@ static void fixglobals (lua_State *L) {
 	return obj;
 }
 
+- (BOOL)toBool {
+	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
+	BOOL value = (BOOL)lua_toboolean(_context.state, -1);
+	lua_pop(_context.state, 1);
+	return value;
+}
+
+- (double)toDouble {
+	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
+	double value = (double)lua_tonumber(_context.state, -1);
+	lua_pop(_context.state, 1);
+	return value;
+}
+
 - (int32_t)toInt32 {
 	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
 	int32_t value = (int32_t)lua_tointeger(_context.state, -1);
 	lua_pop(_context.state, 1);
 	return value;
+}
+
+- (uint32_t)toUInt32 {
+	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
+	uint32_t value = (uint32_t)lua_tointeger(_context.state, -1);
+	lua_pop(_context.state, 1);
+	return value;
+}
+
+- (NSNumber *)toNumber {
+	id obj = [self toObject];
+	if ([obj isKindOfClass:[NSNumber class]]) {
+		return obj;
+	} else if ([obj isKindOfClass:[NSString class]]) {
+		NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+		formatter.numberStyle = NSNumberFormatterDecimalStyle;
+		return [formatter numberFromString:obj];
+	} else {
+		return nil;
+	}
+}
+
+- (NSString *)toString {
+	return [[self toObject] description];
+}
+
+- (NSDate *)toDate {
+	// seconds since epochTime (1970)
+	NSTimeInterval seconds = [self toDouble];
+	return [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
+}
+
+- (NSArray *)toArray {
+	id obj = [self toObject];
+	if ([obj isKindOfClass:[NSArray class]]) {
+		return obj;
+	}
+	return nil;
+}
+
+- (NSDictionary *)toDictionary {
+	id obj = [self toObject];
+	if ([obj isKindOfClass:[NSDictionary class]]) {
+		return obj;
+	}
+	unsigned int count = 0;
+	// Get a list of all properties in the class.
+	objc_property_t *properties = class_copyPropertyList([obj class], &count);
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:count];
+	for (int i = 0; i < count; i++) {
+		NSString *key = [NSString stringWithUTF8String:property_getName(properties[i])];
+		NSString *value = [obj valueForKey:key];
+
+		// Only add to the NSDictionary if it's not nil.
+		if (value)
+			[dictionary setObject:value forKey:key];
+	}
+	free(properties);
+	if (dictionary.count) {
+		return dictionary;
+	}
+	return nil;
 }
 
 - (LuaValue *)callWithArguments:(NSArray *)arguments {

@@ -52,6 +52,14 @@
 + (instancetype)valueWithObject:(id)value inContext:(LuaContext *)context;
 + (instancetype)valueWithInt32:(int32_t)value inContext:(LuaContext *)context;
 - (id)toObject;
+- (BOOL)toBool;
+- (double)toDouble;
 - (int32_t)toInt32;
+- (uint32_t)toUInt32;
+- (NSNumber *)toNumber;
+- (NSString *)toString;
+- (NSDate *)toDate;
+- (NSArray *)toArray;
+- (NSDictionary *)toDictionary;
 - (LuaValue *)callWithArguments:(NSArray *)arguments;
 @end
