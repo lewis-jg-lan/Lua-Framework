@@ -190,8 +190,11 @@ static void fixglobals (lua_State *L) {
 
 - (LuaValue *)evaluateScript:(NSString *)script {
 	if (script) {
-		luaL_dostring(C, script.UTF8String);
-		if (lua_gettop(C) && !lua_isnoneornil(C, -1)) {
+		if (luaL_dostring(C, script.UTF8String)) {
+			NSLog(@"Lua error: %s", lua_tostring(C, -1));
+			lua_pop(C, 1);
+			return nil;
+		} else if (lua_gettop(C) && !lua_isnoneornil(C, -1)) {
 			return [[LuaValue alloc] initWithTopOfStackInContext:self];
 		}
 	}
@@ -201,8 +204,11 @@ static void fixglobals (lua_State *L) {
 - (LuaValue *)evaluateScriptNamed:(NSString *)filename {
 	NSString *fullpath = [[NSBundle mainBundle] pathForResource:filename ofType:@"lua"];
 	if (fullpath) {
-		luaL_dofile(C, fullpath.UTF8String);
-		if (lua_gettop(C) && !lua_isnoneornil(C, -1)) {
+		if (luaL_dofile(C, fullpath.UTF8String)) {
+			NSLog(@"Lua error: %s", lua_tostring(C, -1));
+			lua_pop(C, 1);
+			return nil;
+		} else if (lua_gettop(C) && !lua_isnoneornil(C, -1)) {
 			return [[LuaValue alloc] initWithTopOfStackInContext:self];
 		}
 	}
@@ -433,27 +439,9 @@ static void fixglobals (lua_State *L) {
 		lua_objc_pushpropertylist(_context.state, arg);
 	}
 
-	int err = lua_pcall(_context.state, (int)arguments.count, 1, 0);
-	if (err != 0) {
-		switch(err) {
-			case LUA_ERRRUN:
-				NSLog(@"Lua: runtime error");
-				break;
-
-			case LUA_ERRMEM:
-				NSLog(@"Lua: memory allocation error");
-				break;
-
-			case LUA_ERRERR:
-				NSLog(@"Lua: error handler error");
-				break;
-
-			default:
-				NSLog(@"Lua: unknown error");
-				return nil;
-		}
-
-		NSLog(@"Lua: %s", lua_tostring(_context.state, -1));
+	if (lua_pcall(_context.state, (int)arguments.count, LUA_MULTRET, 0) != 0) {
+		NSLog(@"Lua error: %s", lua_tostring(_context.state, -1));
+		lua_pop(_context.state, 1);
 		return nil;
 	}
 
