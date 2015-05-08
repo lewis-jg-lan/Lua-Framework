@@ -149,7 +149,7 @@
 	XCTAssertTrue([subTable[@"float"] isEqual: @(25.33)]);
 }
 
-- (void)testCallingMethods {
+- (void)testCallingObjCMethodsFromLua {
 	MockObject *mockObject = [[MockObject alloc] init];
 	mockObject.name = @"old name";
 

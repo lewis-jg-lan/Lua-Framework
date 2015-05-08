@@ -190,7 +190,7 @@ static void fixglobals (lua_State *L) {
 
 - (LuaValue *)evaluateScript:(NSString *)script {
 	if (script) {
-		if (luaL_dostring(C, script.UTF8String)) {
+		if (luaL_loadstring(C, script.UTF8String) || lua_pcall(C, 0, LUA_MULTRET, 0)) {
 			NSLog(@"Lua error: %s", lua_tostring(C, -1));
 			lua_pop(C, 1);
 			return nil;
@@ -204,7 +204,7 @@ static void fixglobals (lua_State *L) {
 - (LuaValue *)evaluateScriptNamed:(NSString *)filename {
 	NSString *fullpath = [[NSBundle mainBundle] pathForResource:filename ofType:@"lua"];
 	if (fullpath) {
-		if (luaL_dofile(C, fullpath.UTF8String)) {
+		if (luaL_loadfile(C, fullpath.UTF8String) || lua_pcall(C, 0, LUA_MULTRET, 0)) {
 			NSLog(@"Lua error: %s", lua_tostring(C, -1));
 			lua_pop(C, 1);
 			return nil;
