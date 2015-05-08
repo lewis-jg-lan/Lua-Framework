@@ -1,33 +1,44 @@
-//
-//  Tests.m
-//  Tests
-//
-//  Created by Rhody Lugo on 5/5/15.
-//
-//
+/*
+ * Test.m
+ * GameEditor
+ *
+ * Copyright (c) 2015 Rhody Lugo.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
 #import <Lua/LuaVirtualMachine.h>
+#import "Mocks.h"
 
-@interface MockObject : NSObject
-@property (strong) NSString *name;
-- (void)setName:(NSString *)name appendingNumber:(NSNumber *)number;
-@end
-
-@implementation MockObject
-@synthesize name = _name;
-- (void)setName:(NSString *)name appendingNumber:(NSNumber *)number {
-	self.name = [name stringByAppendingFormat:@" %@",[number stringValue]];
+@interface Tests : XCTestCase {
+	LuaVirtualMachine *_sharedLuaVirtualMachine;
+	LuaContext *_sharedLuaContext;
 }
-@end
-
-@interface Tests : XCTestCase
 - (LuaVirtualMachine *)sharedLuaVirtualMachine;
 - (LuaContext *)sharedLuaContext;
 @end
 
 @implementation Tests
+
+#pragma mark SetUp & TearDown
 
 - (void)setUp {
     [super setUp];
@@ -40,7 +51,12 @@
     [super tearDown];
 }
 
+#pragma mark Tests
+
 - (void)testMultipleLuaContexts {
+
+	/* Test the scope of global and local variables in the same context */
+
 	[self.sharedLuaContext evaluateScript:
 	 @"if not aGlobalVariable then\n"
 	 @"  local aLocalVariable = 'the value'\n"
@@ -49,44 +65,44 @@
 	 ];
 
 	XCTAssertNil(self.sharedLuaContext[@"aLocalVariable"], @"A local variable SHOULD NOT be available from a global context");
-
 	XCTAssertTrue([[self.sharedLuaContext[@"aGlobalVariable"] toObject] isEqualToString:@"the value"], @"A global variable SHOULD be available from a global context");
 
-	LuaContext *anotherLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
-	XCTAssertNotNil(anotherLuaContext, @"Couldn't initialize a separate global context");
+	/* Test the scope of global and local variables from a second context */
 
-	[anotherLuaContext evaluateScript:@"aGlobalVariableInAnotherContext = 'value in other context'"];
+	LuaContext *ctx = self.newLuaContext;
+	XCTAssertNotNil(ctx, @"Couldn't initialize a separate global context");
 
-	XCTAssertTrue(anotherLuaContext[@"aGlobalVariable"] == nil && self.sharedLuaContext[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
+	[ctx evaluateScript:@"aGlobalVariableInAnotherContext = 'value in other context'"];
+	XCTAssertTrue(ctx[@"aGlobalVariable"] == nil && self.sharedLuaContext[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
 }
 
 - (void)testLoadingFrameworksInMultipleContexts {
+
+	/* Create an object from a loaded framework */
+
 	LuaValue *result = [self.sharedLuaContext evaluateScript:
-			   @"objc.import('AVKit')\n"
-			   @"local obj = objc.AVPlayerView:alloc():init()\n"
-			   @"return obj\n"];
+						@"objc.import('AVKit')\n"
+						@"local obj = objc.AVPlayerView:alloc():init()\n"
+						@"return obj\n"];
 
 	XCTAssertNotNil(result, @"Couldn't evaluate the script");
+	XCTAssertTrue([[result toObject] class] == NSClassFromString(@"AVPlayerView"), @"Couldn't create an object from the loaded framework");
 
-	id obj = [[self.sharedLuaContext evaluateScript:
-			   @"objc.import('AVKit')\n"
-			   @"local obj = objc.AVPlayerView:alloc():init()\n"
-			   @"return obj\n"] toObject];
+	/* Create an object from a framework loaded in a new context */
 
-	XCTAssertTrue([obj class] == NSClassFromString(@"AVPlayerView"), @"Couldn't create an object from a loaded framework");
+	LuaContext *ctx = self.newLuaContext;
+	XCTAssertNotNil(ctx, @"Couldn't initialize a second context");
 
-	LuaContext *anotherLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
-	XCTAssertNotNil(anotherLuaContext, @"Couldn't initialize a separate global context");
+	result = [ctx evaluateScript:
+			  @"objc.import('SpriteKit')\n"
+			  @"local obj = objc.SKNode:alloc():init()\n"
+			  @"return obj\n"];
 
-	obj = [[anotherLuaContext evaluateScript:
-			@"objc.import('SpriteKit')\n"
-			@"local obj = objc.SKNode:alloc():init()\n"
-			@"return obj\n"] toObject];
-
-	XCTAssertTrue([obj class] == NSClassFromString(@"SKNode"), @"Couldn't create an object from a loaded framework in a separate context");
+	XCTAssertNotNil(result, @"Couldn't evaluate the script");
+	XCTAssertTrue([[result toObject] class] == NSClassFromString(@"SKNode"), @"Couldn't create an object from a loaded framework in a separate context");
 }
 
-- (void)testRetrievingValues {
+- (void)testRetrievingValuesFromTheLuaContext {
 	NSNumber *result = [[self.sharedLuaContext evaluateScript:
 						 @"anIntNumber = 55\n"
 						 @"aNegativeIntNumber = -15\n"
@@ -167,39 +183,13 @@
 	[ctx evaluateScript:
 	 @"oldName = mockObj:name()"
 	 @"mockObj:setName('new name')"
+	 @"newName = mockObj:name()"
+	 @"mockObj:setName_appendingNumber('name with number', 1.5)"
 	 ];
 
 	XCTAssertTrue([[ctx[@"oldName"] toString] isEqualToString:@"old name"]);
-
-	[ctx evaluateScript:
-	 @"newName = mockObj:name()"
-	 @"mockObj:setName_appendingNumber('name with number', 1.5)"
-	 @"nameWithNumber = mockObj:name()"
-	 ];
-
 	XCTAssertTrue([[ctx[@"newName"] toString] isEqualToString:@"new name"]);
-	XCTAssertTrue([[ctx[@"nameWithNumber"] toString] isEqualToString:@"name with number 1.5"]);
-}
-
-- (void)testAssigningALuaValueObjectToAContext {
-	LuaContext *ctx = [self newLuaContext];
-
-	/* The Obj-C object */
-	MockObject *mockObj = [[MockObject alloc] init];
-	mockObj.name = @"the name";
-
-	/* Pass the object to the Lua context */
-	ctx[@"mockObj"] = [LuaValue valueWithObject:mockObj inContext:ctx];
-
-	/* Modify the object from a Lua script */
-	[ctx evaluateScript:
-	 @"oldName = mockObj:name()"
-	 @"mockObj:setName('new name')"
-	 ];
-
-	/* Test whether the old and new values for the modified property in the object are OK */
-	XCTAssertTrue([[ctx[@"oldName"] toString] isEqualToString:@"the name"]);
-	XCTAssertTrue([mockObj.name isEqualToString:@"new name"]);
+	XCTAssertTrue([mockObj.name isEqualToString:@"name with number 1.5"]);
 }
 
 - (void)testPerformanceExample {
@@ -209,22 +199,22 @@
     }];
 }
 
+#pragma mark HelperMethods
+
 - (LuaVirtualMachine *)sharedLuaVirtualMachine {
-	static LuaVirtualMachine *sharedLuaVirtualMachine = nil;
-	if (!sharedLuaVirtualMachine) {
-		sharedLuaVirtualMachine = [[LuaVirtualMachine alloc] init];
-		XCTAssertNotNil(sharedLuaVirtualMachine, @"Couldn't initialize the Lua virtual machine");
+	if (!_sharedLuaVirtualMachine) {
+		_sharedLuaVirtualMachine = [[LuaVirtualMachine alloc] init];
+		XCTAssertNotNil(_sharedLuaVirtualMachine, @"Couldn't initialize the Lua virtual machine");
 	}
-	return sharedLuaVirtualMachine;
+	return _sharedLuaVirtualMachine;
 }
 
 - (LuaContext *)sharedLuaContext {
-	static LuaContext *sharedLuaContext = nil;
-	if (!sharedLuaContext) {
-		sharedLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
-		XCTAssertNotNil(sharedLuaContext, @"Couldn't initialize the Lua context");
+	if (!_sharedLuaContext) {
+		_sharedLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
+		XCTAssertNotNil(_sharedLuaContext, @"Couldn't initialize the Lua context");
 	}
-	return sharedLuaContext;
+	return _sharedLuaContext;
 }
 
 - (LuaContext *)newLuaContext {
