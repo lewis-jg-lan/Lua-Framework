@@ -812,7 +812,7 @@ BOOL lua_objc_pushpropertylist(lua_State* state,id propertylist){
 
 	else{
 		lua_objc_pushid(state,propertylist);
-		lua_objc_setid(state,-1,propertylist);
+		//lua_objc_setid(state,-1,propertylist);
 		}
 		
 	if(!result)
