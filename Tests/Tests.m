@@ -10,6 +10,14 @@
 #import <XCTest/XCTest.h>
 #import <Lua/LuaVirtualMachine.h>
 
+@interface MockObject : NSObject
+@property (strong) NSString *name;
+@end
+
+@implementation MockObject
+@synthesize name = _name;
+@end
+
 @interface Tests : XCTestCase
 - (LuaVirtualMachine *)sharedLuaVirtualMachine;
 - (LuaContext *)sharedLuaContext;
@@ -139,6 +147,22 @@
 	XCTAssertTrue([subTable isKindOfClass:[NSDictionary class]]);
 	XCTAssertTrue([subTable[@"int"] isEqual:@(55)]);
 	XCTAssertTrue([subTable[@"float"] isEqual: @(25.33)]);
+}
+
+- (void)testCallingMethods {
+	MockObject *mockObject = [[MockObject alloc] init];
+	mockObject.name = @"old name";
+
+	self.sharedLuaContext[@"mockObject"] = mockObject;
+
+	[self.sharedLuaContext evaluateScript:
+	 @"oldName = mockObject:name()"
+	 @"mockObject:setName('new name')"
+	 @"newName = mockObject:name()"
+	 ];
+
+	XCTAssertTrue([[self.sharedLuaContext[@"oldName"] toString] isEqualToString:@"old name"]);
+	XCTAssertTrue([[self.sharedLuaContext[@"newName"] toString] isEqualToString:@"new name"]);
 }
 
 - (void)testPerformanceExample {
