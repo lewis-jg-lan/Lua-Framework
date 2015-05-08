@@ -49,6 +49,13 @@
 }
 
 - (void)testLoadingFrameworksInMultipleContexts {
+	LuaValue *result = [self.sharedLuaContext evaluateScript:
+			   @"objc.import('AVKit')\n"
+			   @"local obj = objc.AVPlayerView:alloc():init()\n"
+			   @"return obj\n"];
+
+	XCTAssertNotNil(result, @"Couldn't evaluate the script");
+
 	id obj = [[self.sharedLuaContext evaluateScript:
 			   @"objc.import('AVKit')\n"
 			   @"local obj = objc.AVPlayerView:alloc():init()\n"
