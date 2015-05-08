@@ -1,5 +1,4 @@
 **xcuserdata*
 ***.o
 ***.a
-***.so
-LuaJIT/src
+lua-5.1/src

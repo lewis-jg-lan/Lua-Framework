@@ -195,31 +195,17 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
-		E47C38951AF4AACA009DFB82 /* ZERO */ = {
+		E4B087901AF121CC00709590 /* lua-5.1 */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = clean;
-			buildConfigurationList = E47C38961AF4AACA009DFB82 /* Build configuration list for PBXLegacyTarget "ZERO" */;
+			buildArgumentsString = macosx;
+			buildConfigurationList = E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "lua-5.1" */;
 			buildPhases = (
 			);
 			buildToolPath = make;
-			buildWorkingDirectory = "$(PROJECT_DIR)/LuaJIT";
+			buildWorkingDirectory = "$(PROJECT_DIR)/lua-5.1";
 			dependencies = (
 			);
-			name = ZERO;
-			passBuildSettingsInEnvironment = 1;
-			productName = LuaJIT;
-		};
-		E4B087901AF121CC00709590 /* LuaJIT */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "-j amalg";
-			buildConfigurationList = E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "LuaJIT" */;
-			buildPhases = (
-			);
-			buildToolPath = make;
-			buildWorkingDirectory = "$(PROJECT_DIR)/LuaJIT";
-			dependencies = (
-			);
-			name = LuaJIT;
+			name = "lua-5.1";
 			passBuildSettingsInEnvironment = 1;
 			productName = LuaJIT;
 		};
@@ -315,8 +301,7 @@
 			projectRoot = "";
 			targets = (
 				2982C07614D3D5D10079E3AF /* Lua */,
-				E47C38951AF4AACA009DFB82 /* ZERO */,
-				E4B087901AF121CC00709590 /* LuaJIT */,
+				E4B087901AF121CC00709590 /* lua-5.1 */,
 				E4B6E2A61AF917C100CF84E6 /* HelloLua */,
 				E4B6E2B81AF917C200CF84E6 /* Tests */,
 			);
@@ -383,7 +368,7 @@
 /* Begin PBXTargetDependency section */
 		E4B087951AF121F700709590 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E4B087901AF121CC00709590 /* LuaJIT */;
+			target = E4B087901AF121CC00709590 /* lua-5.1 */;
 			targetProxy = E4B087941AF121F700709590 /* PBXContainerItemProxy */;
 		};
 		E4B6E2BB1AF917C200CF84E6 /* PBXTargetDependency */ = {
@@ -496,11 +481,11 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lua/Lua-Prefix.pch";
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT/src\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/lua-5.1/src\"";
 				INFOPLIST_FILE = "Lua/Lua-Info.plist";
 				INSTALL_PATH = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT/src\"";
-				OTHER_LDFLAGS = "\"$(SRCROOT)/LuaJIT/src/libluajit.a\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/lua-5.1/src\"";
+				OTHER_LDFLAGS = "\"$(SRCROOT)/lua-5.1/src/liblua.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -515,79 +500,13 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lua/Lua-Prefix.pch";
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT/src\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/lua-5.1/src\"";
 				INFOPLIST_FILE = "Lua/Lua-Info.plist";
 				INSTALL_PATH = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT/src\"";
-				OTHER_LDFLAGS = "\"$(SRCROOT)/LuaJIT/src/libluajit.a\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/lua-5.1/src\"";
+				OTHER_LDFLAGS = "\"$(SRCROOT)/lua-5.1/src/liblua.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
-			};
-			name = Release;
-		};
-		E47C38971AF4AACA009DFB82 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DEBUGGING_SYMBOLS = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "LuaJIT copy";
-			};
-			name = Debug;
-		};
-		E47C38981AF4AACA009DFB82 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "LuaJIT copy";
 			};
 			name = Release;
 		};
@@ -792,16 +711,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E47C38961AF4AACA009DFB82 /* Build configuration list for PBXLegacyTarget "ZERO" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E47C38971AF4AACA009DFB82 /* Debug */,
-				E47C38981AF4AACA009DFB82 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "LuaJIT" */ = {
+		E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "lua-5.1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B087921AF121CC00709590 /* Debug */,
