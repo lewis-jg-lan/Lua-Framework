@@ -12,10 +12,14 @@
 
 @interface MockObject : NSObject
 @property (strong) NSString *name;
+- (void)setName:(NSString *)name appendingNumber:(NSNumber *)number;
 @end
 
 @implementation MockObject
 @synthesize name = _name;
+- (void)setName:(NSString *)name appendingNumber:(NSNumber *)number {
+	self.name = [name stringByAppendingFormat:@" %@",[number stringValue]];
+}
 @end
 
 @interface Tests : XCTestCase
@@ -150,19 +154,52 @@
 }
 
 - (void)testCallingObjCMethodsFromLua {
-	MockObject *mockObject = [[MockObject alloc] init];
-	mockObject.name = @"old name";
+	LuaContext *ctx = [self newLuaContext];
 
-	self.sharedLuaContext[@"mockObject"] = mockObject;
+	/* The Obj-C object */
+	MockObject *mockObj = [[MockObject alloc] init];
+	mockObj.name = @"old name";
 
-	[self.sharedLuaContext evaluateScript:
-	 @"oldName = mockObject:name()"
-	 @"mockObject:setName('new name')"
-	 @"newName = mockObject:name()"
+	/* Pass the object to the Lua context */
+	ctx[@"mockObj"] = mockObj;
+
+	/* Modify the object from a Lua script */
+	[ctx evaluateScript:
+	 @"oldName = mockObj:name()"
+	 @"mockObj:setName('new name')"
 	 ];
 
-	XCTAssertTrue([[self.sharedLuaContext[@"oldName"] toString] isEqualToString:@"old name"]);
-	XCTAssertTrue([[self.sharedLuaContext[@"newName"] toString] isEqualToString:@"new name"]);
+	XCTAssertTrue([[ctx[@"oldName"] toString] isEqualToString:@"old name"]);
+
+	[ctx evaluateScript:
+	 @"newName = mockObj:name()"
+	 @"mockObj:setName_appendingNumber('name with number', 1.5)"
+	 @"nameWithNumber = mockObj:name()"
+	 ];
+
+	XCTAssertTrue([[ctx[@"newName"] toString] isEqualToString:@"new name"]);
+	XCTAssertTrue([[ctx[@"nameWithNumber"] toString] isEqualToString:@"name with number 1.5"]);
+}
+
+- (void)testAssigningALuaValueObjectToAContext {
+	LuaContext *ctx = [self newLuaContext];
+
+	/* The Obj-C object */
+	MockObject *mockObj = [[MockObject alloc] init];
+	mockObj.name = @"the name";
+
+	/* Pass the object to the Lua context */
+	ctx[@"mockObj"] = [LuaValue valueWithObject:mockObj inContext:ctx];
+
+	/* Modify the object from a Lua script */
+	[ctx evaluateScript:
+	 @"oldName = mockObj:name()"
+	 @"mockObj:setName('new name')"
+	 ];
+
+	/* Test whether the old and new values for the modified property in the object are OK */
+	XCTAssertTrue([[ctx[@"oldName"] toString] isEqualToString:@"the name"]);
+	XCTAssertTrue([mockObj.name isEqualToString:@"new name"]);
 }
 
 - (void)testPerformanceExample {
@@ -188,6 +225,12 @@
 		XCTAssertNotNil(sharedLuaContext, @"Couldn't initialize the Lua context");
 	}
 	return sharedLuaContext;
+}
+
+- (LuaContext *)newLuaContext {
+	LuaContext *newLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
+	XCTAssertNotNil(newLuaContext, @"Couldn't initialize a new Lua context");
+	return newLuaContext;
 }
 
 @end
