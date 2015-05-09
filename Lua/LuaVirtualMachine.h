@@ -29,7 +29,6 @@
 
 @interface LuaVirtualMachine : NSObject
 - (instancetype)init;
-+ (void)test;
 @end
 
 #pragma mark LuaContext
