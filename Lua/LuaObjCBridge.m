@@ -204,7 +204,7 @@ lua_State* lua_objc_init(void){
 		lua_pop(state,1);
 		
 		lua_pushboolean(state,0);
-		lua_objc_configuremetatable(state,-1, YES);
+		lua_objc_configuremetatable(state,-1,YES);
 		lua_pop(state,1);
 #endif
 		}
@@ -222,9 +222,9 @@ static int lua_objc_import_framework(lua_State *L){
 	n = lua_gettop(L);
 
 	for(i=n;i>0;--i){
-		const char *framework = lua_tostring(L, -1);
+		const char *framework = lua_tostring(L,-1);
 		NSBundle *bundle = [NSBundle bundleWithPath:[frameworksPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%s.framework", framework]]];
-		void* handle = dlopen(bundle.executablePath.UTF8String, RTLD_NOW);
+		void* handle = dlopen(bundle.executablePath.UTF8String,RTLD_NOW);
 		dlclose(handle);
 		lua_pop(L,1);
 		}
@@ -239,8 +239,8 @@ static int lua_objc_import_framework(lua_State *L){
 	
 int lua_objc_lookup_class(lua_State* state){
 	const char *key = lua_tostring(state,-1);
-	if(strcmp(key, "import") == 0)
-		lua_pushcfunction(state, lua_objc_import_framework);
+	if(strcmp(key,"import") == 0)
+		lua_pushcfunction(state,lua_objc_import_framework);
 	else{
 		id theClass;
 		theClass=NSClassFromString([NSString stringWithUTF8String:key]);
@@ -287,7 +287,7 @@ int lua_objc_open(lua_State* state){
 // Sets various callbacks in the metatable for the value at stack_index.
 //
 
-void lua_objc_configuremetatable(lua_State* state, int stack_index,int hook_gc_events){
+void lua_objc_configuremetatable(lua_State* state,int stack_index,int hook_gc_events){
 	if(stack_index<0){
 		stack_index=lua_gettop(state)+(stack_index+1);
 		}

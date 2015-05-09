@@ -186,7 +186,7 @@
 - (void)testCallingObjCMethodsFromLua {
 	LuaContext *ctx = [self createNewContext];
 
-	/* The Obj-C object */
+	/* The ObjC object */
 	MockObject *mockObj = [[MockObject alloc] init];
 	mockObj.name = @"old name";
 
@@ -215,7 +215,7 @@
 	 @"  return tostring(first)..' '..tostring(second)\n"
 	 @"end"];
 
-	/* Call the Lua function from Obj-C */
+	/* Call the Lua function from ObjC */
 	LuaValue *result = [ctx[@"aFunction"] callWithArguments:@[@"first parameter", @(3.33)]];
 	XCTAssertNotNil(result, @"The funtion has not return value");
 
