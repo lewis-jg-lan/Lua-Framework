@@ -191,17 +191,17 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
-		E4B087901AF121CC00709590 /* lua-5.1 */ = {
+		E4B087901AF121CC00709590 /* liblua */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = macosx;
-			buildConfigurationList = E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "lua-5.1" */;
+			buildConfigurationList = E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "liblua" */;
 			buildPhases = (
 			);
 			buildToolPath = make;
 			buildWorkingDirectory = "$(PROJECT_DIR)/lua-5.1";
 			dependencies = (
 			);
-			name = "lua-5.1";
+			name = liblua;
 			passBuildSettingsInEnvironment = 1;
 			productName = LuaJIT;
 		};
@@ -297,7 +297,7 @@
 			projectRoot = "";
 			targets = (
 				2982C07614D3D5D10079E3AF /* Lua */,
-				E4B087901AF121CC00709590 /* lua-5.1 */,
+				E4B087901AF121CC00709590 /* liblua */,
 				E4B6E2A61AF917C100CF84E6 /* HelloLua */,
 				E4B6E2B81AF917C200CF84E6 /* Tests */,
 			);
@@ -364,7 +364,7 @@
 /* Begin PBXTargetDependency section */
 		E4B087951AF121F700709590 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E4B087901AF121CC00709590 /* lua-5.1 */;
+			target = E4B087901AF121CC00709590 /* liblua */;
 			targetProxy = E4B087941AF121F700709590 /* PBXContainerItemProxy */;
 		};
 		E4B6E2BB1AF917C200CF84E6 /* PBXTargetDependency */ = {
@@ -707,7 +707,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "lua-5.1" */ = {
+		E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "liblua" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B087921AF121CC00709590 /* Debug */,
