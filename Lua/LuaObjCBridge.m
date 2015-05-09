@@ -581,7 +581,8 @@ id lua_objc_toid(lua_State* state,int stack_index){
 //
 
 #ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	#include "minilua.h"
+	#include "lobject.h"
+	#include "lstate.h"
 #endif
 
 #if LUA_OBJC_LUA_DEPLOYMENT_TARGET>LUA_OBJC_LUA_VERSION_5_1_0

@@ -20,7 +20,6 @@
 		E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2D11AF91BAB00CF84E6 /* test.lua */; };
 		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17C1AF46BA800A6C9F8 /* minilua.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +66,6 @@
 		E4B6E2D11AF91BAB00CF84E6 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
 		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
 		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
-		E4F4E17C1AF46BA800A6C9F8 /* minilua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilua.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +122,6 @@
 				E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */,
 				E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */,
 				E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */,
-				E4F4E17C1AF46BA800A6C9F8 /* minilua.h */,
 				2982C08114D3D5D10079E3AF /* Supporting Files */,
 			);
 			path = Lua;
@@ -188,7 +185,6 @@
 			files = (
 				E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */,
 				E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */,
-				E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
