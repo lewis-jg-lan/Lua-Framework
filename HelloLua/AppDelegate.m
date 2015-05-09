@@ -27,6 +27,11 @@
 	/* Pass the application delegate to the Lua context */
 	self.context[@"AppDelegate"] = self;
 
+	/* Completition handler for the dialog sheet */
+	self.context[@"handler"] = ^(NSModalResponse response) {
+		printf("Dialog sheet dismissed\n");
+	};
+
 	/* Run the script file 'test.lua' */
 	[self.context evaluateScriptNamed:@"test"];
 }
