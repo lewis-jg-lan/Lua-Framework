@@ -14,7 +14,7 @@
 #include "lualib.h"
 #include "lauxlib.h"
 
-extern lua_State* lua_objc_init();
+extern lua_State* lua_objc_init(void);
 extern int lua_objc_open(lua_State* state);
 
 #ifdef __OBJC__

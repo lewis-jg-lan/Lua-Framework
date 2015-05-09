@@ -170,7 +170,7 @@ static const luaL_reg lua_objc_libraries[]={
 // specified in lua_objc_libraries.
 //
 
-lua_State* lua_objc_init(){
+lua_State* lua_objc_init(void){
 	lua_State* state=lua_open();
 	if(state){
 	
@@ -586,9 +586,9 @@ id lua_objc_toid(lua_State* state,int stack_index){
 
 
 void* lua_objc_topointer(lua_State* state,int stack_index){
-	void* result;
+	void* result = NULL;
 #ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	StkId stack_record;
+	StkId stack_record = NULL;
 		
 	//
 	// Get the stack record at the specified stack index
@@ -880,7 +880,7 @@ id lua_objc_topropertylist(lua_State* state,int stack_index){
 				result=[NSString stringWithCString:string length:string_length];
 				}
 #else		
-			result=[NSString stringWithCString:string length:string_length];
+			result=[[NSString alloc] initWithBytes:string length:string_length encoding:NSUTF8StringEncoding];
 #endif
 			break;
 			}
@@ -1121,8 +1121,8 @@ void lua_objc_id_setvalues(lua_State* state,int stack_index,NSDictionary* dictio
 int lua_objc_methodcall(lua_State* state){
 	int argumentCount=0;
 	int argumentIndex=0;
-	marg_list argumentList=NULL;
-	int argumentOffset=0;
+	//marg_list argumentList=NULL;
+	//int argumentOffset=0;
 	unsigned argumentSize=0;
 	char* argumentType=NULL;
 	void* argumentValue=NULL;
@@ -1133,7 +1133,7 @@ int lua_objc_methodcall(lua_State* state){
 #endif
 	char* luaErrorMessage=NULL;
 	int resultCount=0;
-	Method method=NULL;
+	//Method method=NULL;
 	id receiver=nil;
 	unsigned resultSize=0;
 	void* resultValue=NULL;
@@ -1155,7 +1155,7 @@ int lua_objc_methodcall(lua_State* state){
 	// Convert the name of the selector to canonical Objective-C form
 	//
 
-	selectorNameLength=lua_strlen(state,lua_upvalueindex(1));
+	selectorNameLength=(int)lua_strlen(state,lua_upvalueindex(1));
 	selectorName=malloc(selectorNameLength+2);
 	if(selectorName==NULL){
 		lua_objc_methodcall_error("Insufficient memory (could not allocate selector buffer).");
@@ -1198,8 +1198,8 @@ int lua_objc_methodcall(lua_State* state){
 	// Create space for passing method arguments between the two environments
 	//
 
-	argumentCount=[signature numberOfArguments];
-	argumentSize=[signature frameLength];
+	argumentCount=(int)[signature numberOfArguments];
+	argumentSize=(unsigned)[signature frameLength];
 	argumentValue=malloc(argumentSize);
 	if(argumentValue==NULL){
 		lua_objc_methodcall_error("Unable to allocate method argument conversion buffer.");		
@@ -1493,7 +1493,7 @@ int lua_objc_methodcall(lua_State* state){
 	 
 	[invocation invoke];
 	if(*[signature methodReturnType]!=LUA_OBJC_TYPE_VOID){
-		resultSize=[signature methodReturnLength];
+		resultSize=(unsigned)[signature methodReturnLength];
 		resultValue=malloc(resultSize);
 		if(resultValue==NULL){
 			lua_objc_methodcall_error("Unable to allocate resultValue conversion buffer.");
@@ -1747,7 +1747,7 @@ int lua_objc_methodlookup(lua_State* state){
  
 unsigned lua_objc_type_alignment(char** type_encoding){
 	int result=-1;
-	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,NULL,(unsigned*)&result);
+	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,NULL,(NSUInteger*)&result);
 	return result;
 	}
 	
@@ -1765,6 +1765,6 @@ unsigned lua_objc_type_alignment(char** type_encoding){
 
 unsigned lua_objc_type_size(char** type_encoding){
 	int result=-1;
-	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,(unsigned*)&result,NULL);
+	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,(NSUInteger*)&result,NULL);
 	return result;
 	}
