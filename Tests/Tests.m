@@ -223,6 +223,26 @@
 	XCTAssertTrue([[result toString] isEqualToString:@"first parameter 3.33"], @"The return value doesn't match");
 }
 
+- (void)testCallingObjCBlocksFromLua {
+	LuaContext *ctx = [self createNewContext];
+
+	/* Pass the ObjC block to Lua */
+	ctx[@"aBlock"] = ^(int parameter, NSString *anotherParameter) {
+		return [NSString stringWithFormat:@"%d %@", parameter, anotherParameter];
+	};
+
+	/* Retrieve the block from the Lua context */
+	NSString *(^returnedBlock)() = [ctx[@"aBlock"] toObject];
+	XCTAssertTrue([returnedBlock(123, @"string parameter") isEqualToString:@"123 string parameter"]);
+
+	/* Call the block from Lua */
+	LuaValue *result = [ctx evaluateScript:
+						@"return aBlock(456, 'another test with string value')"];
+
+	XCTAssertNotNil(result, @"Couldn't call the ObjC block from Lua");
+	XCTAssertTrue([[result toString] isEqualToString:@"456 another test with string value"], @"The returned value doesn't match");
+}
+
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{
