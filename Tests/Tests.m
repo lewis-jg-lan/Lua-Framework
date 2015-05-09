@@ -191,6 +191,23 @@
 	XCTAssertTrue([mockObj.name isEqualToString:@"name with number 1.5"]);
 }
 
+- (void)testCallingLuaFunctionsFromObjC {
+	LuaContext *ctx = [self createNewContext];
+
+	/* The lua script */
+	[ctx evaluateScript:
+	 @"function aFunction(first, second)\n"
+	 @"  return tostring(first)..' '..tostring(second)\n"
+	 @"end"];
+
+	/* Call the Lua function from Obj-C */
+	LuaValue *result = [ctx[@"aFunction"] callWithArguments:@[@"first parameter", @(3.33)]];
+	XCTAssertNotNil(result, @"The funtion has not return value");
+
+	/* Check the returned value */
+	XCTAssertTrue([[result toString] isEqualToString:@"first parameter 3.33"], @"The return value doesn't match");
+}
+
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{
