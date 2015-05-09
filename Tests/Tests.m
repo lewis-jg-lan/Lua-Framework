@@ -29,11 +29,9 @@
 #import "Mocks.h"
 
 @interface Tests : XCTestCase {
-	LuaVirtualMachine *_sharedLuaVirtualMachine;
-	LuaContext *_sharedLuaContext;
+	LuaVirtualMachine *_virtualMachine;
 }
-- (LuaVirtualMachine *)sharedLuaVirtualMachine;
-- (LuaContext *)sharedLuaContext;
+- (LuaContext *)createNewContext;
 @end
 
 @implementation Tests
@@ -42,12 +40,9 @@
 
 - (void)setUp {
     [super setUp];
-	XCTAssertNotNil(self.sharedLuaVirtualMachine);
-	XCTAssertNotNil(self.sharedLuaContext);
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
@@ -56,31 +51,33 @@
 - (void)testMultipleLuaContexts {
 
 	/* Test the scope of global and local variables in the same context */
+	LuaContext *ctx = [self createNewContext];
 
-	[self.sharedLuaContext evaluateScript:
+	[ctx evaluateScript:
 	 @"if not aGlobalVariable then\n"
 	 @"  local aLocalVariable = 'the value'\n"
 	 @"  aGlobalVariable = aLocalVariable\n"
 	 @"end\n"
 	 ];
 
-	XCTAssertNil(self.sharedLuaContext[@"aLocalVariable"], @"A local variable SHOULD NOT be available from a global context");
-	XCTAssertTrue([[self.sharedLuaContext[@"aGlobalVariable"] toObject] isEqualToString:@"the value"], @"A global variable SHOULD be available from a global context");
+	XCTAssertNil(ctx[@"aLocalVariable"], @"A local variable SHOULD NOT be available from a global context");
+	XCTAssertTrue([[ctx[@"aGlobalVariable"] toObject] isEqualToString:@"the value"], @"A global variable SHOULD be available from a global context");
 
 	/* Test the scope of global and local variables from a second context */
 
-	LuaContext *ctx = self.newLuaContext;
-	XCTAssertNotNil(ctx, @"Couldn't initialize a separate global context");
+	LuaContext *ctx2 = [self createNewContext];
+	XCTAssertNotNil(ctx2, @"Couldn't initialize a separate global context");
 
-	[ctx evaluateScript:@"aGlobalVariableInAnotherContext = 'value in other context'"];
-	XCTAssertTrue(ctx[@"aGlobalVariable"] == nil && self.sharedLuaContext[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
+	[ctx2 evaluateScript:@"aGlobalVariableInAnotherContext = 'value in other context'"];
+	XCTAssertTrue(ctx2[@"aGlobalVariable"] == nil && ctx[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
 }
 
 - (void)testLoadingFrameworksInMultipleContexts {
 
 	/* Create an object from a loaded framework */
+	LuaContext *ctx = [self createNewContext];
 
-	LuaValue *result = [self.sharedLuaContext evaluateScript:
+	LuaValue *result = [ctx evaluateScript:
 						@"objc.import('AVKit')\n"
 						@"local obj = objc.AVPlayerView:alloc():init()\n"
 						@"return obj\n"];
@@ -90,10 +87,10 @@
 
 	/* Create an object from a framework loaded in a new context */
 
-	LuaContext *ctx = self.newLuaContext;
-	XCTAssertNotNil(ctx, @"Couldn't initialize a second context");
+	LuaContext *ctx2 = [self createNewContext];
+	XCTAssertNotNil(ctx2, @"Couldn't initialize a second context");
 
-	result = [ctx evaluateScript:
+	result = [ctx2 evaluateScript:
 			  @"objc.import('SpriteKit')\n"
 			  @"local obj = objc.SKNode:alloc():init()\n"
 			  @"return obj\n"];
@@ -103,7 +100,9 @@
 }
 
 - (void)testRetrievingValuesFromTheLuaContext {
-	NSNumber *result = [[self.sharedLuaContext evaluateScript:
+	LuaContext *ctx = [self createNewContext];
+
+	NSNumber *result = [[ctx evaluateScript:
 						 @"anIntNumber = 55\n"
 						 @"aNegativeIntNumber = -15\n"
 
@@ -121,44 +120,44 @@
 
 						 @"return anIntNumber + aFloatNumber\n"] toObject];
 
-	XCTAssertTrue([[self.sharedLuaContext[@"anIntNumber"] toObject] intValue] == 55);
-	XCTAssertTrue([[self.sharedLuaContext[@"aNegativeIntNumber"] toObject] intValue] == -15);
+	XCTAssertTrue([[ctx[@"anIntNumber"] toObject] intValue] == 55);
+	XCTAssertTrue([[ctx[@"aNegativeIntNumber"] toObject] intValue] == -15);
 
-	XCTAssertTrue([[self.sharedLuaContext[@"aFloatNumber"] toObject] floatValue] == 25.33f);
-	XCTAssertTrue([[self.sharedLuaContext[@"aNegativeFloatNumber"] toObject] floatValue] == -45.25f);
+	XCTAssertTrue([[ctx[@"aFloatNumber"] toObject] floatValue] == 25.33f);
+	XCTAssertTrue([[ctx[@"aNegativeFloatNumber"] toObject] floatValue] == -45.25f);
 
-	XCTAssertTrue([[self.sharedLuaContext[@"aTrueBooleanValue"] toObject] boolValue] == YES);
-	XCTAssertTrue([[self.sharedLuaContext[@"aFalseBooleanValue"] toObject] boolValue] == NO);
+	XCTAssertTrue([[ctx[@"aTrueBooleanValue"] toObject] boolValue] == YES);
+	XCTAssertTrue([[ctx[@"aFalseBooleanValue"] toObject] boolValue] == NO);
 
 	XCTAssertTrue([result floatValue] == 55 + 25.33f);
 
-	XCTAssertTrue([self.sharedLuaContext[@"anIntNumber"] toInt32] == 55);
-	XCTAssertTrue([self.sharedLuaContext[@"aNegativeIntNumber"] toInt32] == -15);
-	XCTAssertTrue([self.sharedLuaContext[@"anIntNumber"] toUInt32] == 55);
+	XCTAssertTrue([ctx[@"anIntNumber"] toInt32] == 55);
+	XCTAssertTrue([ctx[@"aNegativeIntNumber"] toInt32] == -15);
+	XCTAssertTrue([ctx[@"anIntNumber"] toUInt32] == 55);
 
-	XCTAssertTrue([self.sharedLuaContext[@"aFloatNumber"] toDouble] == 25.33);
-	XCTAssertTrue([self.sharedLuaContext[@"aNegativeFloatNumber"] toDouble] == -45.25);
+	XCTAssertTrue([ctx[@"aFloatNumber"] toDouble] == 25.33);
+	XCTAssertTrue([ctx[@"aNegativeFloatNumber"] toDouble] == -45.25);
 
-	XCTAssertTrue([self.sharedLuaContext[@"aTrueBooleanValue"] toBool] == YES);
-	XCTAssertTrue([self.sharedLuaContext[@"aFalseBooleanValue"] toBool] == NO);
+	XCTAssertTrue([ctx[@"aTrueBooleanValue"] toBool] == YES);
+	XCTAssertTrue([ctx[@"aFalseBooleanValue"] toBool] == NO);
 
-	XCTAssertTrue([[self.sharedLuaContext[@"anIntNumber"] toNumber] intValue] == 55);
-	XCTAssertTrue([[self.sharedLuaContext[@"aFloatNumber"] toNumber] floatValue] == 25.33f);
-	XCTAssertTrue([[self.sharedLuaContext[@"aStringWithANumber"] toNumber] floatValue] == 1.11e5f);
+	XCTAssertTrue([[ctx[@"anIntNumber"] toNumber] intValue] == 55);
+	XCTAssertTrue([[ctx[@"aFloatNumber"] toNumber] floatValue] == 25.33f);
+	XCTAssertTrue([[ctx[@"aStringWithANumber"] toNumber] floatValue] == 1.11e5f);
 
-	XCTAssertTrue([[self.sharedLuaContext[@"anIntNumber"] toString] isEqualToString:@"55"]);
-	XCTAssertTrue([[self.sharedLuaContext[@"aFloatNumber"] toString] isEqualToString:@"25.33"]);
-	XCTAssertTrue([[self.sharedLuaContext[@"aStringWithANumber"] toString] isEqualToString:@"1.11e5"]);
+	XCTAssertTrue([[ctx[@"anIntNumber"] toString] isEqualToString:@"55"]);
+	XCTAssertTrue([[ctx[@"aFloatNumber"] toString] isEqualToString:@"25.33"]);
+	XCTAssertTrue([[ctx[@"aStringWithANumber"] toString] isEqualToString:@"1.11e5"]);
 
 	NSDateComponents *comps = [[NSDateComponents alloc] init];
 	comps.day = 1;
 	comps.month = 1;
 	comps.year = 2000;
 
-	XCTAssertEqualWithAccuracy([[self.sharedLuaContext[@"year2000InEpochTime"] toDate] timeIntervalSinceReferenceDate],
+	XCTAssertEqualWithAccuracy([[ctx[@"year2000InEpochTime"] toDate] timeIntervalSinceReferenceDate],
 							   [[[NSCalendar currentCalendar] dateFromComponents:comps] timeIntervalSinceReferenceDate], 60*60*24);
 
-	NSDictionary *table = [self.sharedLuaContext[@"aTable"] toObject];
+	NSDictionary *table = [ctx[@"aTable"] toObject];
 	XCTAssertNotNil(table, @"Could't retrieve a table");
 	XCTAssertTrue([table[@"color"] isEqualToString:@"blue"]);
 	XCTAssertTrue([table[@"number"] isEqual:@(2)]);
@@ -170,7 +169,7 @@
 }
 
 - (void)testCallingObjCMethodsFromLua {
-	LuaContext *ctx = [self newLuaContext];
+	LuaContext *ctx = [self createNewContext];
 
 	/* The Obj-C object */
 	MockObject *mockObj = [[MockObject alloc] init];
@@ -201,26 +200,14 @@
 
 #pragma mark HelperMethods
 
-- (LuaVirtualMachine *)sharedLuaVirtualMachine {
-	if (!_sharedLuaVirtualMachine) {
-		_sharedLuaVirtualMachine = [[LuaVirtualMachine alloc] init];
-		XCTAssertNotNil(_sharedLuaVirtualMachine, @"Couldn't initialize the Lua virtual machine");
+- (LuaContext *)createNewContext {
+	if (!_virtualMachine) {
+		_virtualMachine = [[LuaVirtualMachine alloc] init];
+		XCTAssertNotNil(_virtualMachine, @"Couldn't initialize the Lua virtual machine");
 	}
-	return _sharedLuaVirtualMachine;
-}
-
-- (LuaContext *)sharedLuaContext {
-	if (!_sharedLuaContext) {
-		_sharedLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
-		XCTAssertNotNil(_sharedLuaContext, @"Couldn't initialize the Lua context");
-	}
-	return _sharedLuaContext;
-}
-
-- (LuaContext *)newLuaContext {
-	LuaContext *newLuaContext = [[LuaContext alloc] initWithVirtualMachine:self.sharedLuaVirtualMachine];
-	XCTAssertNotNil(newLuaContext, @"Couldn't initialize a new Lua context");
-	return newLuaContext;
+	LuaContext *newContext = [[LuaContext alloc] initWithVirtualMachine:_virtualMachine];
+	XCTAssertNotNil(newContext, @"Couldn't initialize a new Lua context");
+	return newContext;
 }
 
 @end
