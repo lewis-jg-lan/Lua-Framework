@@ -707,7 +707,54 @@ void* lua_objc_topointer(lua_State* state,int stack_index){
 	return result;
 	}
 
+//
+// Blocks
+//
+
+#pragma mark Blocks
+
+static int lua_objc_blockcall(lua_State *state){
+	lua_pushvalue(state,-1);
+	lua_objc_methodcall(state);
+	return 1;
+	}
+
+static NSMethodSignature *lua_objc_blocksignature(id blockObj){
+	struct Block{
+		void *isa;
+		int flags;
+		int reserved;
+		void *invoke;
+
+		struct Descriptor{
+			unsigned long reserved;
+			unsigned long size;
+			void *rest[1];
+			}*descriptor;
+		};
+
+	struct Block *block = (__bridge void *)blockObj;
+
+	int copyDisposeFlag=1<<25;
+	int signatureFlag=1<<30;
+
+	assert(block->flags&signatureFlag);
+
+	int index = 0;
+	if(block->flags&copyDisposeFlag)
+		index+=2;
+
+	const char *types=block->descriptor->rest[index];
+	NSMethodSignature *signature=[NSMethodSignature signatureWithObjCTypes:types];
+
+	while([signature numberOfArguments]<2){
+		types=[[NSString stringWithFormat:@"%s%s",types,@encode(void*)] UTF8String];
+		signature=[NSMethodSignature signatureWithObjCTypes:types];
+		}
 	
+	return signature;
+	}
+
 //
 // Property List Translation
 //
@@ -817,7 +864,19 @@ BOOL lua_objc_pushpropertylist(lua_State* state,id propertylist){
 
 	else{
 		lua_objc_pushid(state,propertylist);
-		//lua_objc_setid(state,-1,propertylist);
+
+		//
+		// Block
+		//
+
+		if ([propertylist isKindOfClass:[^{} class]]){
+
+			lua_getmetatable(state,-1);
+			lua_pushcfunction(state,lua_objc_blockcall);
+			lua_setfield(state,-2,"__call");
+			lua_pop(state,1);
+			}
+
 		}
 		
 	if(!result)
@@ -1157,7 +1216,7 @@ int lua_objc_methodcall(lua_State* state){
 		}
 
 	//
-	// Convert the name of the selector to canonical Objective-C form
+	// Get the invocation signature
 	//
 
 	selectorNameLength=(int)lua_strlen(state,lua_upvalueindex(1));
@@ -1165,25 +1224,50 @@ int lua_objc_methodcall(lua_State* state){
 	if(selectorName==NULL){
 		lua_objc_methodcall_error("Insufficient memory (could not allocate selector buffer).");
 		}
-	strcpy(selectorName,lua_tostring(state,lua_upvalueindex(1)));
 	int stack_index;
-	for(stack_index=0;stack_index<selectorNameLength;stack_index++)
-		if(selectorName[stack_index]=='_')
-			selectorName[stack_index]=':';
-	selectorName[stack_index]='\0';
+	int firstArgument;
 
 	//
-	// Get the Objective-C selector and method
+	// Receiver has a method to be called
 	//
-	 
-	selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
-	signature=[receiver methodSignatureForSelector:selector];
-	if(signature==nil){
-		selectorName[stack_index]=':';
-		selectorName[stack_index+1]='\0';
+
+	if(selectorNameLength>0){
+
+		strcpy(selectorName,lua_tostring(state,lua_upvalueindex(1)));
+		for(stack_index=0;stack_index<selectorNameLength;stack_index++)
+			if(selectorName[stack_index]=='_')
+				selectorName[stack_index]=':';
+		selectorName[stack_index]='\0';
 		selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
 		signature=[receiver methodSignatureForSelector:selector];
+		firstArgument = 2;
+
+		//
+		// Convert the method's name of the selector to canonical Objective-C form
+		//
+
+		if(signature==nil){
+			selectorName[stack_index]=':';
+			selectorName[stack_index+1]='\0';
+			selector=NSSelectorFromString([NSString stringWithUTF8String:selectorName]);
+			signature=[receiver methodSignatureForSelector:selector];
+			}
+
 		}
+
+	//
+	// Receiver has no method to be called, i.e. it's a block
+	//
+
+	else{
+
+		stack_index = 0;
+		strcpy(selectorName,"");
+		selector=nil;
+		signature=lua_objc_blocksignature(receiver);
+		firstArgument = 1;
+		}
+
 	if(signature==nil){
 		lua_objc_methodcall_error("Reciever does not implement method.");
 		}
@@ -1215,7 +1299,7 @@ int lua_objc_methodcall(lua_State* state){
 	// Convert Lua arguments to Objective-C arguments
 	//
 
-	for(argumentIndex=2,luaArgument=2;argumentIndex<argumentCount;argumentIndex++,luaArgument++){
+	for(argumentIndex=firstArgument,luaArgument=2;argumentIndex<argumentCount;argumentIndex++,luaArgument++){
 		argumentType=(char*)[signature getArgumentTypeAtIndex:argumentIndex];
 		switch(*argumentType){
 		
