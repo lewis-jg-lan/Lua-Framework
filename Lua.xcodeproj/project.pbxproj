@@ -18,7 +18,6 @@
 		E4B6E2CA1AF918C600CF84E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2C81AF918C600CF84E6 /* main.m */; };
 		E4B6E2CE1AF91AEF00CF84E6 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
 		E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2D11AF91BAB00CF84E6 /* test.lua */; };
-		E4D8C00C1AFD77F200E184B0 /* Mocks.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D8C00B1AFD77F200E184B0 /* Mocks.m */; };
 		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E4F4E17F1AF46BA800A6C9F8 /* minilua.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17C1AF46BA800A6C9F8 /* minilua.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -66,8 +65,6 @@
 		E4B6E2C71AF918C600CF84E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4B6E2C81AF918C600CF84E6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E4B6E2D11AF91BAB00CF84E6 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
-		E4D8C00B1AFD77F200E184B0 /* Mocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mocks.m; sourceTree = "<group>"; };
-		E4D8C00D1AFD784E00E184B0 /* Mocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mocks.h; sourceTree = "<group>"; };
 		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
 		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
 		E4F4E17C1AF46BA800A6C9F8 /* minilua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilua.h; sourceTree = "<group>"; };
@@ -160,8 +157,6 @@
 			isa = PBXGroup;
 			children = (
 				E4B6E2BF1AF917C200CF84E6 /* Tests.m */,
-				E4D8C00D1AFD784E00E184B0 /* Mocks.h */,
-				E4D8C00B1AFD77F200E184B0 /* Mocks.m */,
 				E4B6E2BD1AF917C200CF84E6 /* Supporting Files */,
 			);
 			path = Tests;
@@ -365,7 +360,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B6E2C01AF917C200CF84E6 /* Tests.m in Sources */,
-				E4D8C00C1AFD77F200E184B0 /* Mocks.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

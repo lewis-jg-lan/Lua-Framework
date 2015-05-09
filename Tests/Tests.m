@@ -26,7 +26,22 @@
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
 #import <Lua/LuaVirtualMachine.h>
-#import "Mocks.h"
+
+#pragma mark Mocks
+
+@interface MockObject : NSObject
+@property (strong) NSString *name;
+- (void)setName:(NSString *)name appendingNumber:(NSNumber *)number;
+@end
+
+@implementation MockObject
+@synthesize name = _name;
+- (void)setName:(NSString *)name appendingNumber:(NSNumber *)number {
+	self.name = [name stringByAppendingFormat:@" %@",[number stringValue]];
+}
+@end
+
+#pragma mark Tests
 
 @interface Tests : XCTestCase {
 	LuaVirtualMachine *_virtualMachine;
@@ -46,7 +61,7 @@
     [super tearDown];
 }
 
-#pragma mark Tests
+#pragma mark Test Methods
 
 - (void)testMultipleLuaContexts {
 
@@ -215,7 +230,7 @@
     }];
 }
 
-#pragma mark HelperMethods
+#pragma mark Helper Methods
 
 - (LuaContext *)createNewContext {
 	if (!_virtualMachine) {
