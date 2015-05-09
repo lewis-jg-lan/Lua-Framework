@@ -226,7 +226,7 @@ static int lua_objc_import_framework(lua_State *L){
 		NSBundle *bundle = [NSBundle bundleWithPath:[frameworksPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%s.framework", framework]]];
 		void* handle = dlopen(bundle.executablePath.UTF8String, RTLD_NOW);
 		dlclose(handle);
-		lua_pop(L, 1);
+		lua_pop(L,1);
 		}
 
 	return 0;
@@ -261,12 +261,16 @@ int lua_objc_open(lua_State* state){
 #if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 	luaL_register(state,lua_tostring(state,-1),lua_objc_functions);
 
-	// Add the lookup class function as fallback
-	lua_getglobal(state, LUA_OBJC_LIBRARY_NAME);
-	lua_createtable(state, 0, 0);
-	lua_pushcfunction(state, lua_objc_lookup_class);
-	lua_setfield(state, -2, "__index");
-	lua_setmetatable(state, -2);
+	//
+	// Set hook to intercept method calls ("index events") and redirect them to the lookup class function
+	//
+
+	lua_getglobal(state,LUA_OBJC_LIBRARY_NAME);
+	lua_createtable(state,0,0);
+	lua_pushcfunction(state,lua_objc_lookup_class);
+	lua_setfield(state,-2,"__index");
+	lua_setmetatable(state,-2);
+
 #else
 	luaL_openlib(state,LUA_OBJC_LIBRARY_NAME,lua_objc_functions,0);
 #endif
