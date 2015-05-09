@@ -481,7 +481,7 @@
 				INFOPLIST_FILE = "Lua/Lua-Info.plist";
 				INSTALL_PATH = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/lua-5.1/src\"";
-				OTHER_LDFLAGS = "\"$(SRCROOT)/lua-5.1/src/liblua.a\"";
+				OTHER_LDFLAGS = "-llua";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -500,7 +500,7 @@
 				INFOPLIST_FILE = "Lua/Lua-Info.plist";
 				INSTALL_PATH = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/lua-5.1/src\"";
-				OTHER_LDFLAGS = "\"$(SRCROOT)/lua-5.1/src/liblua.a\"";
+				OTHER_LDFLAGS = "-llua";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
