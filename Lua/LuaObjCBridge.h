@@ -42,6 +42,7 @@ extern NSDictionary* lua_objc_id_getvalues(lua_State* state,int stack_index);
 
 extern unsigned lua_objc_type_alignment(char** typeptr);
 extern unsigned lua_objc_type_size(char** typeptr);
+extern void lua_objc_printstack(lua_State* state);
 
 //
 //

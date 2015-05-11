@@ -1857,3 +1857,17 @@ unsigned lua_objc_type_size(char** type_encoding){
 	*type_encoding=(char*)NSGetSizeAndAlignment(*type_encoding,(NSUInteger*)&result,NULL);
 	return result;
 	}
+
+//
+// Print to the console the contents of the stack, this function prints a table
+// with the type and value of all the objects in the stack starting from the top.
+//
+
+void lua_objc_printstack(lua_State* state){
+	int top = lua_gettop(state);
+	printf("Lua stack:\n");
+	for(int idx=-1; idx>=-top; idx--){
+		int type = lua_type(state, idx);
+		printf("%d\t%s\t%s\n", idx, lua_typename(state, type), lua_tostring(state, idx));
+		}
+	}
