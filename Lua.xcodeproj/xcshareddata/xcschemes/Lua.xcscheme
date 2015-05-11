@@ -70,7 +70,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "LUA_SRC"
-            value = "lua-5.1"
+            value = "LuaJIT-2.0.3"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

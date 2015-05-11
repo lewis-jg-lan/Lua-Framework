@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E4B087901AF121CC00709590"
-               BuildableName = "liblua"
-               BlueprintName = "liblua"
+               BuildableName = "libluajit"
+               BlueprintName = "libluajit"
                ReferencedContainer = "container:Lua.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +43,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B087901AF121CC00709590"
-            BuildableName = "liblua"
-            BlueprintName = "liblua"
+            BuildableName = "libluajit"
+            BlueprintName = "libluajit"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -61,8 +61,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E4B087901AF121CC00709590"
-            BuildableName = "liblua"
-            BlueprintName = "liblua"
+            BuildableName = "libluajit"
+            BlueprintName = "libluajit"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
