@@ -18,8 +18,9 @@
 		E4B6E2CA1AF918C600CF84E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2C81AF918C600CF84E6 /* main.m */; };
 		E4B6E2CE1AF91AEF00CF84E6 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
 		E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2D11AF91BAB00CF84E6 /* test.lua */; };
-		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		E4D8C0D31B01CA5000E184B0 /* objc in Resources */ = {isa = PBXBuildFile; fileRef = E4D8C0D21B01CA5000E184B0 /* objc */; };
+		E4D8C0DE1B028DE400E184B0 /* LuaVMUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E4D8C0DC1B028DE400E184B0 /* LuaVMUtils.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		E4D8C0DF1B028DE400E184B0 /* LuaVMUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D8C0DD1B028DE400E184B0 /* LuaVMUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,8 +65,9 @@
 		E4B6E2C71AF918C600CF84E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4B6E2C81AF918C600CF84E6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E4B6E2D11AF91BAB00CF84E6 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
-		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
-		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
+		E4D8C0D21B01CA5000E184B0 /* objc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = objc; sourceTree = "<group>"; };
+		E4D8C0DC1B028DE400E184B0 /* LuaVMUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaVMUtils.h; sourceTree = "<group>"; };
+		E4D8C0DD1B028DE400E184B0 /* LuaVMUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaVMUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,8 +122,9 @@
 			children = (
 				E405C7101AF191170028C0E1 /* LuaVirtualMachine.h */,
 				E405C7111AF191170028C0E1 /* LuaVirtualMachine.m */,
-				E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */,
-				E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */,
+				E4D8C0DC1B028DE400E184B0 /* LuaVMUtils.h */,
+				E4D8C0DD1B028DE400E184B0 /* LuaVMUtils.m */,
+				E4D8C0D21B01CA5000E184B0 /* objc */,
 				2982C08114D3D5D10079E3AF /* Supporting Files */,
 			);
 			path = Lua;
@@ -183,8 +186,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */,
 				E405C7121AF191170028C0E1 /* LuaVirtualMachine.h in Headers */,
+				E4D8C0DE1B028DE400E184B0 /* LuaVMUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +312,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4D8C0D31B01CA5000E184B0 /* objc in Resources */,
 				2982C08514D3D5D10079E3AF /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,7 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E405C7131AF191170028C0E1 /* LuaVirtualMachine.m in Sources */,
-				E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */,
+				E4D8C0DF1B028DE400E184B0 /* LuaVMUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

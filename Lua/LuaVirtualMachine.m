@@ -24,7 +24,10 @@
  */
 
 #import "LuaVirtualMachine.h"
-#import "LuaObjCBridge.h"
+#import "LuaVMUtils.h"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 #include <objc/runtime.h>
 
 #pragma mark LuaVirtualMachine
@@ -35,8 +38,11 @@
 
 - (instancetype)init {
 	if (self = [super init]) {
-		L = lua_objc_init();
+		L = lua_open();
 		luaL_openlibs(L);
+
+		const char *resourcePath = [[[NSBundle bundleForClass:[LuaVirtualMachine class]] resourcePath] stringByAppendingPathComponent:@"?/?.lua"].UTF8String;
+		lua_addpackagepath(L, resourcePath);
 	}
 	return self;
 }
@@ -130,7 +136,8 @@
 		if ([obj isKindOfClass:[LuaValue class]]) {
 			lua_rawgeti(self.state, LUA_REGISTRYINDEX, [(LuaValue *)obj index]);
 			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
-		} else if (lua_objc_pushpropertylist(C, obj)) {
+		} else {
+			lua_pushlightuserdata(C, (__bridge void *)obj);
 			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
 		}
 	}
@@ -176,7 +183,7 @@
 
 - (instancetype)initWithObject:(id)value inContext:(LuaContext *)context {
 	if (self = [self initWithContext:context]) {
-		lua_objc_pushpropertylist(_context.state, value);
+		lua_pushlightuserdata(_context.state, (__bridge void *)value);
 		[self storeTopOfStack];
 	}
 	return self;
@@ -236,7 +243,7 @@
 
 - (id)toObject {
 	lua_rawgeti(_context.state, LUA_REGISTRYINDEX, _index);
-	id obj = lua_objc_topropertylist(_context.state, -1);
+	id obj = lua_toid(_context.state, -1);
 	lua_pop(_context.state, 1);
 	return obj;
 }
@@ -332,7 +339,7 @@
 		return nil;
 
 	for (id arg in arguments) {
-		lua_objc_pushpropertylist(_context.state, arg);
+		lua_pushlightuserdata(_context.state, (__bridge void *)arg);
 	}
 
 	if (lua_pcall(_context.state, (int)arguments.count, LUA_MULTRET, 0) != 0) {

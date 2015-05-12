@@ -93,7 +93,8 @@
 	LuaContext *ctx = [self createNewContext];
 
 	LuaValue *result = [ctx evaluateScript:
-						@"objc.import('AVKit')\n"
+						@"local objc = require('objc')\n"
+						@"objc.load('AVKit')\n"
 						@"local obj = objc.AVPlayerView:alloc():init()\n"
 						@"return obj\n"];
 
@@ -106,7 +107,8 @@
 	XCTAssertNotNil(ctx2, @"Couldn't initialize a second context");
 
 	result = [ctx2 evaluateScript:
-			  @"objc.import('SpriteKit')\n"
+			  @"local objc = require('objc')\n"
+			  @"objc.load('SpriteKit')\n"
 			  @"local obj = objc.SKNode:alloc():init()\n"
 			  @"return obj\n"];
 
@@ -131,7 +133,9 @@
 
 						 @"year2000InEpochTime = 946684800\n"
 
-						 @"aTable = {color='blue', number=2, subtable={int=anIntNumber, float=aFloatNumber}}\n"
+						 @"aDictionary = {color='blue', number=2, subArray={anIntNumber, aFloatNumber}}\n"
+
+						 @"anArray = {'blue', 2, {int=anIntNumber, float=aFloatNumber}}\n"
 
 						 @"return anIntNumber + aFloatNumber\n"] toObject];
 
@@ -172,15 +176,23 @@
 	XCTAssertEqualWithAccuracy([[ctx[@"year2000InEpochTime"] toDate] timeIntervalSinceReferenceDate],
 							   [[[NSCalendar currentCalendar] dateFromComponents:comps] timeIntervalSinceReferenceDate], 60*60*24);
 
-	NSDictionary *table = [ctx[@"aTable"] toObject];
-	XCTAssertNotNil(table, @"Could't retrieve a table");
-	XCTAssertTrue([table[@"color"] isEqualToString:@"blue"]);
-	XCTAssertTrue([table[@"number"] isEqual:@(2)]);
-	XCTAssertTrue([table[@"subtable"] isKindOfClass:[NSDictionary class]]);
-	NSDictionary *subTable = table[@"subtable"];
-	XCTAssertTrue([subTable isKindOfClass:[NSDictionary class]]);
-	XCTAssertTrue([subTable[@"int"] isEqual:@(55)]);
-	XCTAssertTrue([subTable[@"float"] isEqual: @(25.33)]);
+	NSDictionary *dictionary = [ctx[@"aDictionary"] toObject];
+	XCTAssertNotNil(dictionary, @"Could't retrieve the dictionary");
+	XCTAssertTrue([dictionary[@"color"] isEqualToString:@"blue"]);
+	XCTAssertTrue([dictionary[@"number"] isEqual:@(2)]);
+	NSArray *subArray = dictionary[@"subArray"];
+	XCTAssertTrue([subArray isKindOfClass:[NSArray class]]);
+	XCTAssertTrue([subArray[0] isEqual:@(55)]);
+	XCTAssertTrue([subArray[1] isEqual: @(25.33)]);
+
+	NSArray *array = [ctx[@"anArray"] toObject];
+	XCTAssertNotNil(array, @"Could't retrieve the array");
+	XCTAssertTrue([array[0] isEqualToString:@"blue"]);
+	XCTAssertTrue([array[1] isEqual:@(2)]);
+	NSDictionary *subDictionary = array[2];
+	XCTAssertTrue([subDictionary isKindOfClass:[NSDictionary class]]);
+	XCTAssertTrue([subDictionary[@"int"] isEqual:@(55)]);
+	XCTAssertTrue([subDictionary[@"float"] isEqual: @(25.33)]);
 }
 
 - (void)testCallingObjCMethodsFromLua {
