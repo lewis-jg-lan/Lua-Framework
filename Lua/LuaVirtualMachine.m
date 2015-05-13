@@ -339,7 +339,7 @@
 		return nil;
 
 	for (id arg in arguments) {
-		lua_pushlightuserdata(_context.state, (__bridge void *)arg);
+		lua_pushid(_context.state, arg);
 	}
 
 	if (lua_pcall(_context.state, (int)arguments.count, LUA_MULTRET, 0) != 0) {
