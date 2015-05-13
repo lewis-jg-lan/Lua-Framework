@@ -485,7 +485,11 @@ void lua_objc_setid(lua_State* state,int stack_index,id object){
 	if(!lua_getmetatable(state,stack_index)){
 		lua_newtable(state);
 		lua_setmetatable(state,stack_index);
+#ifdef LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
 		lua_objc_configuremetatable(state,stack_index,[object respondsToSelector:@selector(retain)]);
+#else
+		lua_objc_configuremetatable(state,stack_index,0);
+#endif
 		lua_getmetatable(state,stack_index);
 		}
 	metatable=lua_gettop(state);	
