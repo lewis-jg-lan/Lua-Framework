@@ -129,8 +129,8 @@ local intptr_ct = ffi.typeof'intptr_t'
 local function nptr(p) --convert pointer to Lua number for using as table key
 	if p == nil then return nil end
 	local np = ffi.cast(intptr_ct, p)
-	local n = tonumber(np)
-	assert(ffi.cast(intptr_ct, n) == np) --check that we don't get pointers in the upper 13 bits on 64bit
+	local n = tostring(np)
+	--assert(ffi.cast(intptr_ct, n) == np) --check that we don't get pointers in the upper 13 bits on 64bit
 	return n
 end
 

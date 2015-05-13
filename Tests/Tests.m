@@ -35,7 +35,6 @@
 @end
 
 @implementation MockObject
-@synthesize name = _name;
 - (void)setName:(NSString *)name appendingNumber:(NSNumber *)number {
 	self.name = [name stringByAppendingFormat:@" %@",[number stringValue]];
 }
@@ -220,9 +219,9 @@
 	[ctx evaluateScript:
 	 @LUA_STRING(
 				 local objc = require('objc')
-				 oldName = mockObj:name()
+				 oldName = mockObj.name
 				 mockObj:setName(objc.toobj('new name'))
-				 newName = mockObj:name()
+				 newName = mockObj.name
 				 mockObj:setName_appendingNumber(objc.toobj'name with number', objc.toobj(1.5))
 				 )
 	 ];
