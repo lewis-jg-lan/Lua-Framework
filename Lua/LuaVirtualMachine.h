@@ -25,6 +25,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define LUA_STRING(s...) #s
+
 #pragma mark LuaVirtualMachine
 
 @interface LuaVirtualMachine : NSObject

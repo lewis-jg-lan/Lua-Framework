@@ -69,10 +69,12 @@
 	LuaContext *ctx = [self createNewContext];
 
 	[ctx evaluateScript:
-	 @"if not aGlobalVariable then\n"
-	 @"  local aLocalVariable = 'the value'\n"
-	 @"  aGlobalVariable = aLocalVariable\n"
-	 @"end\n"
+	 @LUA_STRING(
+				 if not aGlobalVariable then
+					local aLocalVariable = 'the value'
+					aGlobalVariable = aLocalVariable
+				 end
+				 )
 	 ];
 
 	XCTAssertNil(ctx[@"aLocalVariable"], @"A local variable SHOULD NOT be available from a global context");
@@ -93,9 +95,12 @@
 	LuaContext *ctx = [self createNewContext];
 
 	LuaValue *result = [ctx evaluateScript:
-						@"objc.import('AVKit')\n"
-						@"local obj = objc.AVPlayerView:alloc():init()\n"
-						@"return obj\n"];
+						@LUA_STRING(
+									objc.import('AVKit')
+									local obj = objc.AVPlayerView:alloc():init()
+									return obj
+									)
+						];
 
 	XCTAssertNotNil(result, @"Couldn't evaluate the script");
 	XCTAssertTrue([[result toObject] class] == NSClassFromString(@"AVPlayerView"), @"Couldn't create an object from the loaded framework");
@@ -106,9 +111,12 @@
 	XCTAssertNotNil(ctx2, @"Couldn't initialize a second context");
 
 	result = [ctx2 evaluateScript:
-			  @"objc.import('SpriteKit')\n"
-			  @"local obj = objc.SKNode:alloc():init()\n"
-			  @"return obj\n"];
+			  @LUA_STRING(
+						  objc.import('SpriteKit')
+						  local obj = objc.SKNode:alloc():init()
+						  return obj
+						  )
+			  ];
 
 	XCTAssertNotNil(result, @"Couldn't evaluate the script");
 	XCTAssertTrue([[result toObject] class] == NSClassFromString(@"SKNode"), @"Couldn't create an object from a loaded framework in a separate context");
@@ -118,22 +126,25 @@
 	LuaContext *ctx = [self createNewContext];
 
 	NSNumber *result = [[ctx evaluateScript:
-						 @"anIntNumber = 55\n"
-						 @"aNegativeIntNumber = -15\n"
+						 @LUA_STRING(
+									 anIntNumber = 55
+									 aNegativeIntNumber = -15
 
-						 @"aFloatNumber = 25.33\n"
-						 @"aNegativeFloatNumber = -45.25\n"
+									 aFloatNumber = 25.33
+									 aNegativeFloatNumber = -45.25
 
-						 @"aTrueBooleanValue = true\n"
-						 @"aFalseBooleanValue = false\n"
+									 aTrueBooleanValue = true
+									 aFalseBooleanValue = false
 
-						 @"aStringWithANumber = '1.11e5'\n"
+									 aStringWithANumber = '1.11e5'
 
-						 @"year2000InEpochTime = 946684800\n"
+									 year2000InEpochTime = 946684800
 
-						 @"aTable = {color='blue', number=2, subtable={int=anIntNumber, float=aFloatNumber}}\n"
-
-						 @"return anIntNumber + aFloatNumber\n"] toObject];
+									 aTable = {color='blue', number=2, subtable={int=anIntNumber, float=aFloatNumber}}
+									 
+									 return anIntNumber + aFloatNumber
+									 )
+						 ] toObject];
 
 	XCTAssertTrue([[ctx[@"anIntNumber"] toObject] intValue] == 55);
 	XCTAssertTrue([[ctx[@"aNegativeIntNumber"] toObject] intValue] == -15);
@@ -195,10 +206,12 @@
 
 	/* Modify the object from a Lua script */
 	[ctx evaluateScript:
-	 @"oldName = mockObj:name()"
-	 @"mockObj:setName('new name')"
-	 @"newName = mockObj:name()"
-	 @"mockObj:setName_appendingNumber('name with number', 1.5)"
+	 @LUA_STRING(
+				 oldName = mockObj:name()
+				 mockObj:setName('new name')
+				 newName = mockObj:name()
+				 mockObj:setName_appendingNumber('name with number', 1.5)
+				 )
 	 ];
 
 	XCTAssertTrue([[ctx[@"oldName"] toString] isEqualToString:@"old name"]);
@@ -211,9 +224,12 @@
 
 	/* The lua script */
 	[ctx evaluateScript:
-	 @"function aFunction(first, second)\n"
-	 @"  return tostring(first)..' '..tostring(second)\n"
-	 @"end"];
+	 @LUA_STRING(
+				 function aFunction(first, second)
+					return tostring(first)..' '..tostring(second)
+				 end
+				 )
+	 ];
 
 	/* Call the Lua function from ObjC */
 	LuaValue *result = [ctx[@"aFunction"] callWithArguments:@[@"first parameter", @(3.33)]];
@@ -236,8 +252,7 @@
 	XCTAssertTrue([returnedBlock(123, @"string parameter") isEqualToString:@"123 string parameter"]);
 
 	/* Call the block from Lua */
-	LuaValue *result = [ctx evaluateScript:
-						@"return aBlock(456, 'another test with string value')"];
+	LuaValue *result = [ctx evaluateScript:@"return aBlock(456, 'another test with string value')"];
 
 	XCTAssertNotNil(result, @"Couldn't call the ObjC block from Lua");
 	XCTAssertTrue([[result toString] isEqualToString:@"456 another test with string value"], @"The returned value doesn't match");
