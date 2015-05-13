@@ -207,6 +207,7 @@
 
 	/* Modify the object from a Lua script */
 	[ctx evaluateScript:
+	 @"local objc = require('objc')\n"
 	 @"oldName = mockObj:name()"
 	 @"mockObj:setName('new name')"
 	 @"newName = mockObj:name()"

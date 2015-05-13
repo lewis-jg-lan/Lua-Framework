@@ -45,6 +45,10 @@ void cdataToPointer(id cdata, void **pointer) {
 	*pointer = (__bridge void *)(cdata);
 }
 
+id pointerToId(void *pointer) {
+	return (__bridge id)(pointer);
+}
+
 id lua_toid(lua_State *L, int idx) {
 
 	id result = nil;
@@ -58,6 +62,12 @@ id lua_toid(lua_State *L, int idx) {
 
 		if (type == LUA_TSTRING) {
 			result = [NSString stringWithUTF8String:lua_tostring(L, idx)];
+
+		} else if (type == LUA_TNUMBER) {
+			result = [NSNumber numberWithDouble:lua_tonumber(L, idx)];
+
+		} else if (type == LUA_TBOOLEAN) {
+			result = [NSNumber numberWithBool:lua_toboolean(L, idx)];
 
 		} else if (type == LUA_TCDATA) {
 			void *pointer = NULL;
@@ -79,12 +89,6 @@ id lua_toid(lua_State *L, int idx) {
 
 		} else if (type == LUA_TUSERDATA) {
 			result = (__bridge id)lua_touserdata(L, idx);
-
-		} else if (type == LUA_TNUMBER) {
-			result = [NSNumber numberWithDouble:lua_tonumber(L, idx)];
-
-		} else if (type == LUA_TBOOLEAN) {
-			result = [NSNumber numberWithBool:lua_toboolean(L, idx)];
 
 		} else if (type == LUA_TTABLE) {
 			int length = (int)lua_objlen(L, idx);
@@ -137,4 +141,46 @@ id lua_toid(lua_State *L, int idx) {
 	}
 
 	return result;
+}
+
+void lua_pushid(lua_State *L, id obj) {
+	Class class = [obj class];
+	
+	if (obj == nil) {
+		lua_pushnil(L);
+
+	} else if ([class isSubclassOfClass:[NSString class]]) {
+		lua_pushstring(L, [obj UTF8String]);
+
+	} else if ([class isSubclassOfClass:[NSNumber class]]) {
+
+		const char *type = [obj objCType];
+
+		if (strcmp(type, @encode(BOOL)) == 0) {
+			lua_pushboolean(L, [obj boolValue]);
+
+		} else {
+			lua_pushnumber(L, [obj doubleValue]);
+		}
+
+	} else if ([class isSubclassOfClass:[NSArray class]]) {
+		assert(0);
+
+	} else if ([class isSubclassOfClass:[NSDictionary class]]) {
+		assert(0);
+
+	} else {
+		lua_pushlightuserdata(L, (__bridge void *)obj);
+		lua_setglobal(L, "__TEMP_USERDATA__");
+
+		const char *script =
+		"local objc = require'objc'\n"
+		"local ffi = require'ffi'\n"
+		"return ffi.cast(ffi.typeof'id', __TEMP_USERDATA__)\n";
+
+		if (luaL_loadstring(L, script) || lua_pcall(L, 0, LUA_MULTRET, 0)) {
+			NSLog(@"Lua error: %s", lua_tostring(L, -1));
+			lua_pop(L, 1);
+		}
+	}
 }

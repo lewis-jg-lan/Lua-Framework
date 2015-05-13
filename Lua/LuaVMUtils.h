@@ -27,5 +27,9 @@
 #include "lua.h"
 
 int lua_addpackagepath(lua_State *L, const char *path);
-void cdataToPointer(id cdata, void **pointer);
+
 id lua_toid(lua_State *L, int idx);
+void lua_pushid(lua_State *L, id obj);
+
+void cdataToPointer(id cdata, void **pointer);
+id pointerToId(void *pointer);

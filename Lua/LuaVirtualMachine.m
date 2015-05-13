@@ -137,7 +137,7 @@
 			lua_rawgeti(self.state, LUA_REGISTRYINDEX, [(LuaValue *)obj index]);
 			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
 		} else {
-			lua_pushlightuserdata(C, (__bridge void *)obj);
+			lua_pushid(C, obj);
 			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
 		}
 	}
