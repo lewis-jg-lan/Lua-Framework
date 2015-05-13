@@ -41,8 +41,10 @@
 		L = lua_open();
 		luaL_openlibs(L);
 
-		const char *resourcePath = [[[NSBundle bundleForClass:[LuaVirtualMachine class]] resourcePath] stringByAppendingPathComponent:@"?/?.lua"].UTF8String;
-		lua_addpackagepath(L, resourcePath);
+		NSString *resourcePath = [[NSBundle bundleForClass:[LuaVirtualMachine class]] resourcePath];
+		lua_addpackagepath(L, [resourcePath stringByAppendingPathComponent:@"?.lua"].UTF8String);
+		lua_addpackagepath(L, [resourcePath stringByAppendingPathComponent:@"?/?.lua"].UTF8String);
+		lua_addpackagepath(L, [resourcePath stringByAppendingPathComponent:@"?/init.lua"].UTF8String);
 	}
 	return self;
 }
@@ -339,7 +341,7 @@
 		return nil;
 
 	for (id arg in arguments) {
-		lua_pushlightuserdata(_context.state, (__bridge void *)arg);
+		lua_pushid(_context.state, arg);
 	}
 
 	if (lua_pcall(_context.state, (int)arguments.count, LUA_MULTRET, 0) != 0) {
