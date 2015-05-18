@@ -18,18 +18,12 @@
 		E4B6E2CA1AF918C600CF84E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E4B6E2C81AF918C600CF84E6 /* main.m */; };
 		E4B6E2CE1AF91AEF00CF84E6 /* Lua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2982C07714D3D5D10079E3AF /* Lua.framework */; };
 		E4B6E2D21AF91BAB00CF84E6 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = E4B6E2D11AF91BAB00CF84E6 /* test.lua */; };
+		E4BFB8241B0ADD2B00B7A691 /* libluajit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4BFB81D1B0ABFE200B7A691 /* libluajit.a */; };
 		E4F4E17D1AF46BA800A6C9F8 /* LuaObjCBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E4F4E17E1AF46BA800A6C9F8 /* LuaObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E4B087941AF121F700709590 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2982C06D14D3D5D10079E3AF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4B087901AF121CC00709590;
-			remoteInfo = LuaJIT;
-		};
 		E4B6E2BA1AF917C200CF84E6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2982C06D14D3D5D10079E3AF /* Project object */;
@@ -44,7 +38,36 @@
 			remoteGlobalIDString = 2982C07614D3D5D10079E3AF;
 			remoteInfo = Lua;
 		};
+		E4BFB8221B0ADC5B00B7A691 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2982C06D14D3D5D10079E3AF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E4BFB81C1B0ABFE200B7A691;
+			remoteInfo = luajit;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E4BFB7A91B0AAB7100B7A691 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4BFB8391B0BD15500B7A691 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2982C07714D3D5D10079E3AF /* Lua.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Lua.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +87,8 @@
 		E4B6E2C71AF918C600CF84E6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4B6E2C81AF918C600CF84E6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E4B6E2D11AF91BAB00CF84E6 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
+		E4BFB81D1B0ABFE200B7A691 /* libluajit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libluajit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4BFB83B1B0BD15500B7A691 /* libluajit-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libluajit-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4F4E17A1AF46BA800A6C9F8 /* LuaObjCBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaObjCBridge.h; sourceTree = "<group>"; };
 		E4F4E17B1AF46BA800A6C9F8 /* LuaObjCBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaObjCBridge.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -73,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4BFB8241B0ADD2B00B7A691 /* libluajit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +115,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				E43758591AF9754D00FF0C83 /* Lua.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4BFB81A1B0ABFE200B7A691 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4BFB8381B0BD15500B7A691 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,6 +151,8 @@
 				2982C07714D3D5D10079E3AF /* Lua.framework */,
 				E4B6E2A71AF917C100CF84E6 /* HelloLua.app */,
 				E4B6E2B91AF917C200CF84E6 /* Tests.xctest */,
+				E4BFB81D1B0ABFE200B7A691 /* libluajit.a */,
+				E4BFB83B1B0BD15500B7A691 /* libluajit-ios.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,24 +230,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXHeadersBuildPhase section */
-
-/* Begin PBXLegacyTarget section */
-		E4B087901AF121CC00709590 /* libluajit */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "";
-			buildConfigurationList = E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "libluajit" */;
-			buildPhases = (
+		E4BFB81B1B0ABFE200B7A691 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
-			buildToolPath = make;
-			buildWorkingDirectory = "$(PROJECT_DIR)/LuaJIT-2.0.3";
-			dependencies = (
-			);
-			name = libluajit;
-			passBuildSettingsInEnvironment = 1;
-			productName = LuaJIT;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXLegacyTarget section */
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		2982C07614D3D5D10079E3AF /* Lua */ = {
@@ -220,7 +252,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				E4B087951AF121F700709590 /* PBXTargetDependency */,
+				E4BFB8231B0ADC5B00B7A691 /* PBXTargetDependency */,
 			);
 			name = Lua;
 			productName = Lua;
@@ -234,6 +266,7 @@
 				E4B6E2A31AF917C100CF84E6 /* Sources */,
 				E4B6E2A41AF917C100CF84E6 /* Frameworks */,
 				E4B6E2A51AF917C100CF84E6 /* Resources */,
+				E4BFB7A91B0AAB7100B7A691 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -263,6 +296,42 @@
 			productReference = E4B6E2B91AF917C200CF84E6 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E4BFB81C1B0ABFE200B7A691 /* luajit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4BFB81E1B0ABFE200B7A691 /* Build configuration list for PBXNativeTarget "luajit" */;
+			buildPhases = (
+				E4BFB8211B0ABFF100B7A691 /* ShellScript */,
+				E4BFB8191B0ABFE200B7A691 /* Sources */,
+				E4BFB81A1B0ABFE200B7A691 /* Frameworks */,
+				E4BFB81B1B0ABFE200B7A691 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = luajit;
+			productName = luajit;
+			productReference = E4BFB81D1B0ABFE200B7A691 /* libluajit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		E4BFB83A1B0BD15500B7A691 /* luajit-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4BFB84C1B0BD15500B7A691 /* Build configuration list for PBXNativeTarget "luajit-ios" */;
+			buildPhases = (
+				E4BFB8521B0BD17F00B7A691 /* ShellScript */,
+				E4BFB8371B0BD15500B7A691 /* Sources */,
+				E4BFB8381B0BD15500B7A691 /* Frameworks */,
+				E4BFB8391B0BD15500B7A691 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "luajit-ios";
+			productName = "luajit-ios";
+			productReference = E4BFB83B1B0BD15500B7A691 /* libluajit-ios.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -271,15 +340,18 @@
 			attributes = {
 				LastUpgradeCheck = 0630;
 				TargetAttributes = {
-					E4B087901AF121CC00709590 = {
-						CreatedOnToolsVersion = 6.3.1;
-					};
 					E4B6E2A61AF917C100CF84E6 = {
 						CreatedOnToolsVersion = 6.3.1;
 					};
 					E4B6E2B81AF917C200CF84E6 = {
 						CreatedOnToolsVersion = 6.3.1;
 						TestTargetID = E4B6E2A61AF917C100CF84E6;
+					};
+					E4BFB81C1B0ABFE200B7A691 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+					E4BFB83A1B0BD15500B7A691 = {
+						CreatedOnToolsVersion = 6.3.1;
 					};
 				};
 			};
@@ -297,9 +369,10 @@
 			projectRoot = "";
 			targets = (
 				2982C07614D3D5D10079E3AF /* Lua */,
-				E4B087901AF121CC00709590 /* libluajit */,
-				E4B6E2A61AF917C100CF84E6 /* HelloLua */,
 				E4B6E2B81AF917C200CF84E6 /* Tests */,
+				E4B6E2A61AF917C100CF84E6 /* HelloLua */,
+				E4BFB81C1B0ABFE200B7A691 /* luajit */,
+				E4BFB83A1B0BD15500B7A691 /* luajit-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -332,6 +405,35 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		E4BFB8211B0ABFF100B7A691 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "shopt -s extglob\n\nif [ ! -e $BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME ]; then\n    LUADIR=\"$SRCROOT/luajit\"\n\n    mkdir -p $BUILT_PRODUCTS_DIR\n\n    for ARCH in $ARCHS ; do\n        TARGET_ARCH=\"-m32\"\n\n        if [ \"$ARCH\" == \"arm64\" ] || [ \"$ARCH\" == \"x86_64\" ] ; then\n            TARGET_ARCH=\"-m64\"\n        fi\n\n\t\tTARGET_SYSTEM=\"Darwin\"\n\n\t\tif [ $SDKROOT == $iphoneos ] || [ $SDKROOT == $iphonesimulator ] ; then\n            TARGET_SYSTEM=\"iOS\"\n        fi\n\n        make -C \"$LUADIR\" CC=\"clang\" HOST_CC=\"clang $TARGET_ARCH -I/usr/include -isysroot $DEVELOPER_SDK_DIR\" HOST_LDFLAGS=\"-L/usr/lib\" TARGET_SYS=$TARGET_SYSTEM CROSS=\"/usr/bin/\" TARGET_FLAGS=\"-isysroot $SDKROOT -arch $ARCH\" clean amalg\n\n        if [ ! -e \"$LUADIR/src/libluajit.a\" ]; then\n            exit 1\n        fi\n\n        mv \"$LUADIR/src/libluajit.a\" $BUILT_PRODUCTS_DIR/libluajit-${ARCH}.a\n    done\n\n    lipo -create $BUILT_PRODUCTS_DIR/libluajit-*.a -output $BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME\n\n    rm $BUILT_PRODUCTS_DIR/!($EXECUTABLE_PREFIX$PRODUCT_NAME).a\nfi";
+		};
+		E4BFB8521B0BD17F00B7A691 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "shopt -s extglob\n\nif [ ! -e $BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME ]; then\n    LUADIR=\"$SRCROOT/luajit\"\n\n    mkdir -p $BUILT_PRODUCTS_DIR\n\n    for ARCH in $ARCHS ; do\n        TARGET_ARCH=\"-m32\"\n\n        if [ \"$ARCH\" == \"arm64\" ] || [ \"$ARCH\" == \"x86_64\" ] ; then\n            TARGET_ARCH=\"-m64\"\n        fi\n\n\t\tTARGET_SYSTEM=\"Darwin\"\n\n\t\tif [ $SDKROOT == $iphoneos ] || [ $SDKROOT == $iphonesimulator ] ; then\n            TARGET_SYSTEM=\"iOS\"\n        fi\n\n        make -C \"$LUADIR\" CC=\"clang\" HOST_CC=\"clang $TARGET_ARCH -I/usr/include -isysroot $DEVELOPER_SDK_DIR\" HOST_LDFLAGS=\"-L/usr/lib\" TARGET_SYS=$TARGET_SYSTEM CROSS=\"/usr/bin/\" TARGET_FLAGS=\"-isysroot $SDKROOT -arch $ARCH\" clean amalg\n\n        if [ ! -e \"$LUADIR/src/libluajit.a\" ]; then\n            exit 1\n        fi\n\n        mv \"$LUADIR/src/libluajit.a\" $BUILT_PRODUCTS_DIR/libluajit-${ARCH}.a\n    done\n\n    lipo -create $BUILT_PRODUCTS_DIR/libluajit-*.a -output $BUILT_PRODUCTS_DIR/$EXECUTABLE_NAME\n\n    rm $BUILT_PRODUCTS_DIR/!($EXECUTABLE_PREFIX$PRODUCT_NAME).a\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2982C07214D3D5D10079E3AF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -359,14 +461,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E4BFB8191B0ABFE200B7A691 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E4BFB8371B0BD15500B7A691 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E4B087951AF121F700709590 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E4B087901AF121CC00709590 /* libluajit */;
-			targetProxy = E4B087941AF121F700709590 /* PBXContainerItemProxy */;
-		};
 		E4B6E2BB1AF917C200CF84E6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E4B6E2A61AF917C100CF84E6 /* HelloLua */;
@@ -376,6 +487,11 @@
 			isa = PBXTargetDependency;
 			target = 2982C07614D3D5D10079E3AF /* Lua */;
 			targetProxy = E4B6E2CF1AF91AF300CF84E6 /* PBXContainerItemProxy */;
+		};
+		E4BFB8231B0ADC5B00B7A691 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E4BFB81C1B0ABFE200B7A691 /* luajit */;
+			targetProxy = E4BFB8221B0ADC5B00B7A691 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -477,11 +593,9 @@
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lua/Lua-Prefix.pch";
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT-2.0.3/src\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/luajit/src\"";
 				INFOPLIST_FILE = "Lua/Lua-Info.plist";
 				INSTALL_PATH = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT-2.0.3/src\"";
-				OTHER_LDFLAGS = "\"$(SRCROOT)/LuaJIT-2.0.3/src/libluajit.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -496,79 +610,11 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lua/Lua-Prefix.pch";
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT-2.0.3/src\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/luajit/src\"";
 				INFOPLIST_FILE = "Lua/Lua-Info.plist";
 				INSTALL_PATH = "@loader_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/LuaJIT-2.0.3/src\"";
-				OTHER_LDFLAGS = "\"$(SRCROOT)/LuaJIT-2.0.3/src/libluajit.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
-			};
-			name = Release;
-		};
-		E4B087921AF121CC00709590 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DEBUGGING_SYMBOLS = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = libluajit;
-			};
-			name = Debug;
-		};
-		E4B087931AF121CC00709590 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = libluajit;
 			};
 			name = Release;
 		};
@@ -686,6 +732,93 @@
 			};
 			name = Release;
 		};
+		E4BFB81F1B0ABFE200B7A691 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E4BFB8201B0ABFE200B7A691 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		E4BFB84D1B0BD15500B7A691 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		E4BFB84E1B0BD15500B7A691 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -707,15 +840,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B087911AF121CC00709590 /* Build configuration list for PBXLegacyTarget "libluajit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E4B087921AF121CC00709590 /* Debug */,
-				E4B087931AF121CC00709590 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		E4B6E2C11AF917C200CF84E6 /* Build configuration list for PBXNativeTarget "HelloLua" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -733,6 +857,23 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		E4BFB81E1B0ABFE200B7A691 /* Build configuration list for PBXNativeTarget "luajit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4BFB81F1B0ABFE200B7A691 /* Debug */,
+				E4BFB8201B0ABFE200B7A691 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4BFB84C1B0BD15500B7A691 /* Build configuration list for PBXNativeTarget "luajit-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4BFB84D1B0BD15500B7A691 /* Debug */,
+				E4BFB84E1B0BD15500B7A691 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
