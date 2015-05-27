@@ -120,29 +120,32 @@
 }
 
 - (LuaValue *)objectForKeyedSubscript:(id)key {
-	if ([key isKindOfClass:[NSString class]]) {
-		lua_getglobal(C, [[self luaKeyWithString:key] UTF8String]);
-		if (!lua_isnoneornil(C, -1)) {
-			return [[LuaValue alloc] initWithTopOfStackInContext:self];
-		}
+	if (![key isKindOfClass:[NSString class]]) {
+		if ([key respondsToSelector:@selector(stringValue)])
+			key = [key stringValue];
+		else
+			key = [key description];
+	}
+	lua_getglobal(C, [key UTF8String]);
+	if (!lua_isnoneornil(C, -1)) {
+		return [[LuaValue alloc] initWithTopOfStackInContext:self];
 	}
 	return nil;
 }
 
-- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key {
-	if ([(NSObject *)key isKindOfClass:[NSString class]]) {
-		if ([obj isKindOfClass:[LuaValue class]]) {
-			lua_rawgeti(self.state, LUA_REGISTRYINDEX, [(LuaValue *)obj index]);
-			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
-		} else if (lua_objc_pushpropertylist(C, obj)) {
-			lua_setglobal(C, [[self luaKeyWithString:(NSString *)key] UTF8String]);
-		}
+- (void)setObject:(id)obj forKeyedSubscript:(id)key {
+	if (![key isKindOfClass:[NSString class]]) {
+		if ([key respondsToSelector:@selector(stringValue)])
+			key = [key stringValue];
+		else
+			key = [key description];
 	}
-}
-
-- (NSString *)luaKeyWithString:(NSString *)string {
-	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\W." options:NSRegularExpressionCaseInsensitive error:NULL];
-	return [regex stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, [string length]) withTemplate:@"_"];
+	if ([obj isKindOfClass:[LuaValue class]]) {
+		lua_rawgeti(self.state, LUA_REGISTRYINDEX, [(LuaValue *)obj index]);
+		lua_setglobal(C, [key UTF8String]);
+	} else if (lua_objc_pushpropertylist(C, obj)) {
+		lua_setglobal(C, [key UTF8String]);
+	}
 }
 
 - (void)dealloc {
