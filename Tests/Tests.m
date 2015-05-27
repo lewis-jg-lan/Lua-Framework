@@ -81,12 +81,18 @@
 	XCTAssertTrue([[ctx[@"aGlobalVariable"] toObject] isEqualToString:@"the value"], @"A global variable SHOULD be available from a global context");
 
 	/* Test the scope of global and local variables from a second context */
-
 	LuaContext *ctx2 = [self createNewContext];
 	XCTAssertNotNil(ctx2, @"Couldn't initialize a separate global context");
 
 	[ctx2 evaluateScript:@"aGlobalVariableInAnotherContext = 'value in other context'"];
 	XCTAssertTrue(ctx2[@"aGlobalVariable"] == nil && ctx[@"aGlobalVariableInAnotherContext"] == nil, @"A global variable from one context SHOUD NOT be available to other contexts");
+
+	/* Test passing values between contexts */
+	ctx2[@"theOtherGlobalVariable"] = [ctx evaluateScript:@"return aGlobalVariable"];
+	XCTAssertTrue([[ctx2[@"theOtherGlobalVariable"] toObject] isEqualToString:@"the value"]);
+	[ctx2 evaluateScript:@"theOtherGlobalVariable = 'changed'"];
+	XCTAssertTrue([[ctx2[@"theOtherGlobalVariable"] toObject] isEqualToString:@"changed"]);
+	XCTAssertTrue([[ctx[@"aGlobalVariable"] toObject] isEqualToString:@"the value"]);
 }
 
 - (void)testLoadingFrameworksInMultipleContexts {
