@@ -19,51 +19,6 @@
 #include <dlfcn.h>
 
 //
-// Lua Versioning Configuration
-//
-
-#pragma mark Lua Versioning Configuration
-
-//
-// These definitions instruct the LuaObjCBridge to account for differences
-// between the various versions of the Lua library itself.
-//
-// The bridge is always configured to compile against the version included with
-// it in the release .dmg archive, but can be configured to compile against
-// earlier versions by changing these values.
-//
-// The earliest version of Lua against which the bridge has been tested is v5.0
-//
- 
-#define LUA_OBJC_LUA_VERSION_5_0_0 0x050000
-#define LUA_OBJC_LUA_VERSION_5_0_1 0x050001
-#define LUA_OBJC_LUA_VERSION_5_1_0 0x050100
-
-#ifndef LUA_OBJC_LUA_DEPLOYMENT_TARGET
-	#define LUA_OBJC_LUA_DEPLOYMENT_TARGET LUA_OBJC_LUA_VERSION_5_1_0
-#endif
-	
-//
-// Optional Configuration
-//
-
-#pragma mark Optional Configuration
-
-//
-// These #defines enable features of the bridge which may not be compatible
-// with scripts or code originally written for earlier versions.
-//
-// It should be fairly obvious from their names what these do. The features they
-// enable can be disabled simply by commenting them out here. All efforts have
-// been made to ensure that doing so will not cause adverse (backwards-
-// incompatible) side effects.
-//
-	
-#if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
-	#define LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
-#endif
-	
-//
 // Symbolic Constants
 //
 
@@ -142,24 +97,14 @@ const luaL_reg lua_objc_functions[]={
 //
 
 static const luaL_reg lua_objc_libraries[]={
-#if LUA_OBJC_OBJC_LUA_OBJC_DEPLOYMENT_TARGET>=LUA_OBJC_OBJC_LUA_OBJC_VERSION_5_1_0
-	{"base",luaopen_base},
-#else
-	{"",luaopen_base},
-#endif
+	{"_G",luaopen_base},
 	{LUA_TABLIBNAME,luaopen_table},
 	{LUA_IOLIBNAME,luaopen_io},
-#if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 	{LUA_OSLIBNAME,luaopen_os},
-#endif
 	{LUA_STRLIBNAME,luaopen_string},
 	{LUA_MATHLIBNAME,luaopen_math},
 	{LUA_DBLIBNAME,luaopen_debug},
-#if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 	{LUA_LOADLIBNAME,luaopen_package},
-#else
-	{LUA_LOADLIBNAME,luaopen_loadlib},
-#endif
 	{LUA_OBJC_LIBRARY_NAME,lua_objc_open},
 	{NULL, NULL}
 	};
@@ -179,14 +124,9 @@ lua_State* lua_objc_init(void){
 	
 		const luaL_reg* libraries=lua_objc_libraries;
 		for(;libraries->func;libraries++){
-#if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 			lua_pushcfunction(state,libraries->func);
 			lua_pushstring(state,libraries->name);
 			lua_call(state,1,0);
-#else
-			libraries->func(state);
-			lua_settop(state,0);
-#endif
 			}
 		}
 	return state;
@@ -239,7 +179,6 @@ int lua_objc_lookup_class(lua_State* state){
 //
 	
 int lua_objc_open(lua_State* state){
-#if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
 	luaL_register(state,lua_tostring(state,-1),lua_objc_functions);
 
 	//
@@ -252,9 +191,6 @@ int lua_objc_open(lua_State* state){
 	lua_setfield(state,-2,"__index");
 	lua_setmetatable(state,-2);
 
-#else
-	luaL_openlib(state,LUA_OBJC_LIBRARY_NAME,lua_objc_functions,0);
-#endif
 	return 0;
 	}
 	
@@ -378,8 +314,7 @@ void lua_objc_pushid(lua_State* state,id object){
 // Releases the Objective-C object associated with a Lua value. This is called
 // automatically by Lua when the associated value is garbage-collected.
 // Objective-C objects are only retained if they are instances (i.e. class
-// objects are not retained), and only if the bridge has been compiled with
-// LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES #defined. In this case, instances
+// objects are not retained.) In this case, instances
 // will be retained every time they are associated with a Lua value using
 // lua_objc_setid(), lua_objc_pushid() or lua_objc_pushpropertylist().
 //
@@ -451,11 +386,6 @@ id lua_objc_toid(lua_State* state,int stack_index){
 // values throughout a particular Lua session, the Bridge depends on the Lua
 // garbage collector not moving blocks of memory around.
 //
-
-#if LUA_OBJC_LUA_DEPLOYMENT_TARGET>LUA_OBJC_LUA_VERSION_5_1_0
-	#warning lua_objc_topointer() has not been tested for your target Lua version.
-#endif
-
 
 void* lua_objc_topointer(lua_State* state,int stack_index){
 	void* result = NULL;
