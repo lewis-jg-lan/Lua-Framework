@@ -717,9 +717,6 @@ int lua_objc_methodcall(lua_State* state){
 	void* argumentValue=NULL;
 	NSInvocation* invocation=nil;
 	int luaArgument=0;
-#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-	int luaFloatArguments=0;
-#endif
 	char* luaErrorMessage=NULL;
 	int resultCount=0;
 	//Method method=NULL;
@@ -874,9 +871,6 @@ int lua_objc_methodcall(lua_State* state){
 				break;
 				}
 			case _C_DBL:{
-#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-				double value;
-#endif
 				if(lua_isnumber(state,luaArgument)){
 					lua_objc_methodcall_setArgumentValue(double,lua_tonumber(state,luaArgument));
 					}
@@ -886,20 +880,9 @@ int lua_objc_methodcall(lua_State* state){
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to double).");
 					}
-#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-				if(luaFloatArguments>=LUA_OBJC_MARG_MAX_FLOATS){
-					lua_objc_methodcall_error("Too many floating point arguments (The NeXT runtime on PPC only allows 13).");	
-					}
-				lua_objc_marg_setDoubleValue(argumentList,luaFloatArguments,value);
-				luaFloatArguments++;
-				marg_setValue(argumentList,argumentOffset,double,value);
-#endif
 				break;
 				}
 			case _C_FLT:{
-#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-				float value;
-#endif
 				if(lua_isnumber(state,luaArgument)){
 					lua_objc_methodcall_setArgumentValue(float,lua_tonumber(state,luaArgument));
 					}
@@ -909,14 +892,6 @@ int lua_objc_methodcall(lua_State* state){
 				else{
 					lua_objc_methodcall_error("Type mismatch for method argument (expecting something that can be converted to float).");
 					}
-#ifdef LUA_OBJC_METHODCALL_PASS_FLOATS_IN_MARG_HEADER
-				if(luaFloatArguments>=LUA_OBJC_MARG_MAX_FLOATS){
-					lua_objc_methodcall_error("Too many floating point arguments (The NeXT runtime on PPC only allows 13).");	
-					}
-				lua_objc_marg_setDoubleValue(argumentList,luaFloatArguments,value);
-				luaFloatArguments++;
-				marg_setValue(argumentList,argumentOffset,float,value);
-#endif
 				break;
 				}
 			case _C_INT:{
