@@ -310,27 +310,6 @@ id lua_objc_toid(lua_State* state,int stack_index){
 	}
 	
 //
-// Converts a Lua stack index into a pointer to the underlying Lua value
-// structure. This is used by lua_objc_setid() and lua_objc_getid() to give a
-// unique identifier for each value, for reasons discussed in comments under
-// lua_objc_getid(). 
-//
-// This is a reimplementation of index2adr(), an internal Lua function. It works
-// for Lua v5.1.0, but may need to be reimplemented in future if Lua's internals
-// change.
-//
-// Note, for example, that since this function is used to uniquely identify 
-// values throughout a particular Lua session, the Bridge depends on the Lua
-// garbage collector not moving blocks of memory around.
-//
-
-void* lua_objc_topointer(lua_State* state,int stack_index){
-	void* result = NULL;
-	result=lua_topointer(state,stack_index);
-	return result;
-	}
-
-//
 // Blocks
 //
 

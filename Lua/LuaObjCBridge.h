@@ -50,7 +50,6 @@ extern void lua_objc_printstack(lua_State* state);
 //
 
 extern void lua_objc_configuremetatable(lua_State* state, int stack_index,int hook_gc_events);
-extern void* lua_objc_topointer(lua_State* state,int stack_index);
 
 //
 //
