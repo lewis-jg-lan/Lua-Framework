@@ -15,7 +15,6 @@
 #include "lauxlib.h"
 
 extern lua_State* lua_objc_init(void);
-extern int lua_objc_open(lua_State* state);
 
 #ifdef __OBJC__
 	#import <Foundation/Foundation.h>
@@ -59,7 +58,6 @@ extern void* lua_objc_topointer(lua_State* state,int stack_index);
 //
 //
 
-extern int lua_objc_lookup_class(lua_State* state);
 extern int lua_objc_methodcall(lua_State* state);
 extern int lua_objc_methodlookup(lua_State* state);
 extern int lua_objc_release(lua_State* state);

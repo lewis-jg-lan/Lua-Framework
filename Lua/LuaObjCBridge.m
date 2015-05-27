@@ -29,8 +29,6 @@
 // Lua execution environment
 //
 
-#define LUA_OBJC_GLOBAL_OBJECT_STORAGE_NAME "__lua_objc_ids"
-#define LUA_OBJC_LIBRARY_NAME "objc"
 #define LUA_OBJC_OBJECT_STORAGE_NAME "__lua_objc_id"
 	
 //
@@ -83,12 +81,10 @@
 #pragma mark Initialisation
 	
 //
-// The contents of this struct are exposed to the Lua interpreter as a global 
-// table called "objc" (as defined in LUA_OBJC_LIBRARY_NAME)
+// The contents of this struct are exposed to the Lua interpreter as a global values
 //
 
 const luaL_reg lua_objc_functions[]={
-	//{"class",lua_objc_lookup_class},
 	{NULL,NULL},
 	};
 	
@@ -98,14 +94,17 @@ const luaL_reg lua_objc_functions[]={
 
 static const luaL_reg lua_objc_libraries[]={
 	{"_G",luaopen_base},
-	{LUA_TABLIBNAME,luaopen_table},
-	{LUA_IOLIBNAME,luaopen_io},
-	{LUA_OSLIBNAME,luaopen_os},
-	{LUA_STRLIBNAME,luaopen_string},
+//	{LUA_COLIBNAME,luaopen_coroutine},
 	{LUA_MATHLIBNAME,luaopen_math},
-	{LUA_DBLIBNAME,luaopen_debug},
-	{LUA_LOADLIBNAME,luaopen_package},
-	{LUA_OBJC_LIBRARY_NAME,lua_objc_open},
+	{LUA_STRLIBNAME,luaopen_string},
+	{LUA_TABLIBNAME,luaopen_table},
+//	{LUA_IOLIBNAME,luaopen_io},
+//	{LUA_OSLIBNAME,luaopen_os},
+//	{LUA_LOADLIBNAME,luaopen_package},
+//	{LUA_DBLIBNAME,luaopen_debug},
+//	{LUA_BITLIBNAME,luaopen_bit},
+//	{LUA_JITLIBNAME,luaopen_jit},
+//	{LUA_FFILIBNAME,luaopen_ffi},
 	{NULL, NULL}
 	};
 	
@@ -130,68 +129,6 @@ lua_State* lua_objc_init(void){
 			}
 		}
 	return state;
-	}
-
-//
-// Load a list of Frameworks.
-//
-
-static int lua_objc_import_framework(lua_State *L){
-	NSString *frameworksPath = @"/System/Library/Frameworks";
-
-	int i, n;
-	n = lua_gettop(L);
-
-	for(i=n;i>0;--i){
-		const char *framework = lua_tostring(L,-1);
-		NSBundle *bundle = [NSBundle bundleWithPath:[frameworksPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%s.framework", framework]]];
-		void* handle = dlopen(bundle.executablePath.UTF8String,RTLD_NOW);
-		dlclose(handle);
-		lua_pop(L,1);
-		}
-
-	return 0;
-	}
-
-//
-// A Lua function. Takes a string from the Lua stack, and uses lua_objc_pushid()
-// to return the Objective-C class named by the string to the Lua caller.
-//
-	
-int lua_objc_lookup_class(lua_State* state){
-	const char *key = lua_tostring(state,-1);
-	if(strcmp(key,"import") == 0)
-		lua_pushcfunction(state,lua_objc_import_framework);
-	else{
-		id theClass;
-		theClass=NSClassFromString([NSString stringWithUTF8String:key]);
-		if(theClass!=nil)
-			lua_objc_pushid(state,theClass);
-		else
-			lua_pushnil(state);
-		}
-	return 1;
-	}
-	
-//
-// Initialises the Lua library. Useful if you want to initialise your own Lua 
-// interpreter.
-//
-	
-int lua_objc_open(lua_State* state){
-	luaL_register(state,lua_tostring(state,-1),lua_objc_functions);
-
-	//
-	// Set hook to intercept method calls ("index events") and redirect them to the lookup class function
-	//
-
-	lua_getglobal(state,LUA_OBJC_LIBRARY_NAME);
-	lua_createtable(state,0,0);
-	lua_pushcfunction(state,lua_objc_lookup_class);
-	lua_setfield(state,-2,"__index");
-	lua_setmetatable(state,-2);
-
-	return 0;
 	}
 	
 //

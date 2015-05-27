@@ -95,39 +95,6 @@
 	XCTAssertTrue([[ctx[@"aGlobalVariable"] toObject] isEqualToString:@"the value"]);
 }
 
-- (void)testLoadingFrameworksInMultipleContexts {
-
-	/* Create an object from a loaded framework */
-	LuaContext *ctx = [self createNewContext];
-
-	LuaValue *result = [ctx evaluateScript:
-						@LUA_STRING(
-									objc.import('AVKit')
-									local obj = objc.AVPlayerView:alloc():init()
-									return obj
-									)
-						];
-
-	XCTAssertNotNil(result, @"Couldn't evaluate the script");
-	XCTAssertTrue([[result toObject] class] == NSClassFromString(@"AVPlayerView"), @"Couldn't create an object from the loaded framework");
-
-	/* Create an object from a framework loaded in a new context */
-
-	LuaContext *ctx2 = [self createNewContext];
-	XCTAssertNotNil(ctx2, @"Couldn't initialize a second context");
-
-	result = [ctx2 evaluateScript:
-			  @LUA_STRING(
-						  objc.import('SpriteKit')
-						  local obj = objc.SKNode:alloc():init()
-						  return obj
-						  )
-			  ];
-
-	XCTAssertNotNil(result, @"Couldn't evaluate the script");
-	XCTAssertTrue([[result toObject] class] == NSClassFromString(@"SKNode"), @"Couldn't create an object from a loaded framework in a separate context");
-}
-
 - (void)testRetrievingValuesFromTheLuaContext {
 	LuaContext *ctx = [self createNewContext];
 
