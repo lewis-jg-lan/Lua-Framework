@@ -40,6 +40,7 @@
 @interface LuaContext : NSObject
 @property (readonly, strong) LuaVirtualMachine *virtualMachine;
 - (instancetype)initWithVirtualMachine:(LuaVirtualMachine *)virtualMachine;
+- (instancetype)init;
 - (LuaValue *)evaluateScript:(NSString *)script;
 - (LuaValue *)evaluateScriptNamed:(NSString *)filename;
 - (LuaValue *)objectForKeyedSubscript:(id)key;

@@ -84,6 +84,10 @@
 	return self;
 }
 
+- (instancetype)init {
+	return [self initWithVirtualMachine:[[LuaVirtualMachine alloc] init]];
+}
+
 - (LuaValue *)evaluateScript:(NSString *)script {
 	if (script) {
 		if (luaL_loadstring(C, script.UTF8String) || lua_pcall(C, 0, LUA_MULTRET, 0)) {
