@@ -60,7 +60,6 @@
 //
 	
 #if LUA_OBJC_LUA_DEPLOYMENT_TARGET>=LUA_OBJC_LUA_VERSION_5_1_0
-	//#define LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
 	#define LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
 #endif
 	
@@ -189,24 +188,6 @@ lua_State* lua_objc_init(void){
 			lua_settop(state,0);
 #endif
 			}
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-
-		//
-		// Configure metatables for built-in value types which correspond to Cocoa property-list types
-		//
-		
-		lua_pushstring(state,"");
-		lua_objc_configuremetatable(state,-1,YES);
-		lua_pop(state,1);
-		
-		lua_pushnumber(state,0);
-		lua_objc_configuremetatable(state,-1,YES);
-		lua_pop(state,1);
-		
-		lua_pushboolean(state,0);
-		lua_objc_configuremetatable(state,-1,YES);
-		lua_pop(state,1);
-#endif
 		}
 	return state;
 	}
@@ -336,11 +317,7 @@ id lua_objc_getid(lua_State* state,int stack_index){
 	id result=nil;
 	if(lua_getmetatable(state,stack_index)){
 		int metatable=lua_gettop(state);
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-		if((lua_istable(state,stack_index))||(lua_isuserdata(state,stack_index))){
-#else
 		if(lua_istable(state,stack_index)){
-#endif
 
 			//
 			// Get the Objective-C object stored in the metatable
@@ -353,56 +330,6 @@ id lua_objc_getid(lua_State* state,int stack_index){
 				}
 			lua_pop(state,1); // result;
 			}
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-		else if(!(lua_isnil(state,stack_index))){
-
-			//
-			// Get the Objective-C object associated with this specific value.
-			// 
-			// In Lua v5.1.0, each *instance* of a table and light userdata has its
-			// own metatable. But each *class* of every other type shares a
-			// metatable with all the others (strings, numbers, etc).
-			//
-			// We, however, need to be able to associate specific instances of Lua
-			// strings and numbers with specific Objective-C instances of NSStrings
-			// and NSNumbers. 
-			//
-			// To do this, we use a Lua table. The keys to the dictionary are
-			// instances of Lua types, and the values are the ObjC instances
-			// associated with them. These strings are stored in the global table 
-			// LUA_OBJC_LIBRARY_NAME created by lua_objc_open(), under the name 
-			// LUA_OBJC_GLOBAL_OBJECT_STORAGE_NAME to avoid any name collisions.
-			// 
-			// Unfortunately, the Lua public API does not provide any way of
-			// converting a stack index into some sort of a unique reference
-			// identifying the actual value stored on the stack. To get around this,
-			// we re-implement one of Lua's private functions which does just that:
-			// index2adr() takes a stack index and returns a pointer to the value
-			// structure used internally by the Lua engine. We use this in full
-			// knowledge that it's a dirty hack that may not work in future.
-			//
-			
-			lua_pushstring(state,LUA_OBJC_LIBRARY_NAME);
-			lua_gettable(state,LUA_GLOBALSINDEX);
-			lua_pushstring(state,LUA_OBJC_GLOBAL_OBJECT_STORAGE_NAME);
-			lua_gettable(state,-2);
-							
-			//
-			// Retrieve the id from our global private table
-			//
-			
-			if(!lua_isnil(state,-1)){
-				lua_pushlightuserdata(state,lua_objc_topointer(state,stack_index));
-				lua_gettable(state,-2);
-				if(lua_isuserdata(state,-1)){
-					result=lua_touserdata(state,-1);
-					}
-				lua_pop(state,1); // result
-				}
-			lua_pop(state,1); // object-with-shared-metatable cache
-			lua_pop(state,1); // library global table
-			}
-#endif
 		lua_pop(state,1); // parameter metatable
 		}
 	return result;
@@ -494,60 +421,11 @@ void lua_objc_setid(lua_State* state,int stack_index,id object){
 	// Store a reference to the id in the metatable
 	//		
 
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	if((lua_istable(state,stack_index))||(lua_isuserdata(state,stack_index))){
-#else
 	if(lua_istable(state,stack_index)){
-#endif
 		lua_pushstring(state,LUA_OBJC_OBJECT_STORAGE_NAME);
 		lua_pushlightuserdata(state,object);
 		lua_settable(state,metatable);
 		}
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	else if(!lua_isnil(state,stack_index)){
-	
-		//
-		// This type has a shared metatable - we have to store the id globally
-		//
-		
-		lua_pushstring(state,LUA_OBJC_LIBRARY_NAME);
-		lua_gettable(state,LUA_GLOBALSINDEX);
-		int globals=lua_gettop(state);
-		lua_pushstring(state,LUA_OBJC_GLOBAL_OBJECT_STORAGE_NAME);
-		lua_gettable(state,globals);
-		
-		//
-		// Create a global private table for storage, if required.
-		//
-		// To avoid interfering with the mechanism linking Lua's garbage
-		// collection with ObjC's retain/release system, we use a Lua table to
-		// do this.
-		//
-		
-		if(lua_isnil(state,-1)){
-			lua_pop(state,1);
-			
-			lua_pushstring(state,LUA_OBJC_GLOBAL_OBJECT_STORAGE_NAME);
-			lua_newtable(state);
-			lua_settable(state,globals);
-			
-			lua_pushstring(state,LUA_OBJC_GLOBAL_OBJECT_STORAGE_NAME);
-			lua_gettable(state,globals);
-			}
-		int ids=lua_gettop(state);
-			
-		//
-		// Store the id in our global private table
-		//
-			
-		lua_pushlightuserdata(state,lua_objc_topointer(state,stack_index));
-		lua_pushlightuserdata(state,object);
-		lua_settable(state,ids);
-			
-		lua_pop(state,1);
-		lua_pop(state,1);
-		}
-#endif
 	lua_pop(state,1);
 	}
 	
@@ -574,11 +452,6 @@ id lua_objc_toid(lua_State* state,int stack_index){
 // garbage collector not moving blocks of memory around.
 //
 
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	#include "lobject.h"
-	#include "lstate.h"
-#endif
-
 #if LUA_OBJC_LUA_DEPLOYMENT_TARGET>LUA_OBJC_LUA_VERSION_5_1_0
 	#warning lua_objc_topointer() has not been tested for your target Lua version.
 #endif
@@ -586,118 +459,7 @@ id lua_objc_toid(lua_State* state,int stack_index){
 
 void* lua_objc_topointer(lua_State* state,int stack_index){
 	void* result = NULL;
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	StkId stack_record = NULL;
-		
-	//
-	// Get the stack record at the specified stack index
-	//
-	
-	if(stack_index>0){
-		stack_record=state->base+(stack_index-1);
-		if((stack_record<=(StkId)(state->top-state->base))||(stack_record>=state->top)){
-			stack_record=NULL;
-			}
-		}
-	
-	//
-	// Negative (ie: top-relative) stack indices
-	//
-	
-	else if(stack_index>LUA_REGISTRYINDEX){
-		if((stack_index!=0)&&(-stack_index<=state->top-state->base)){
-			stack_record=state->top+stack_index;
-			}
-		}
-	
-	//
-	// Pseudoindices to special data areas, namely:
-	//
-	
-	else{ 
-		switch(stack_index){
-			
-			//
-			// the data registry;
-			//
-			
-			case LUA_REGISTRYINDEX:
-				stack_record=registry(state);
-			
-			//
-			// the execution environment;
-			//
-			
-			case LUA_ENVIRONINDEX:{
-				Closure *func=curr_func(state);
-				sethvalue(state,&state->env,func->c.env);
-				stack_record=&state->env;
-				}
-			
-			//
-			// global data; and
-			//
-			
-			case LUA_GLOBALSINDEX:
-				stack_record=gt(state);
-			
-			//
-			// closures for current function.
-			//
-				
-			default:{
-				Closure* func=curr_func(state);
-				stack_index=LUA_GLOBALSINDEX-stack_index;
-				stack_record=(stack_index<=func->c.nupvalues)?&func->c.upvalue[stack_index-1]:NULL;
-				}
-			}
-		}
-		
-	//
-	// Now get the pointer to the Lua storage record
-	//
-	
-	if(stack_record){
-		switch(stack_record->tt){
-			case LUA_TNUMBER:{
-				result=(void*)stack_record->value.gc;
-				break;
-				}
-			case LUA_TBOOLEAN:{
-				result=(void*)stack_record->value.gc;
-				break;
-				}
-			case LUA_TSTRING:{
-				result=&(stack_record->value.gc->ts);
-				break;
-				}
-			case LUA_TTABLE:{
-				result=&(stack_record->value.gc->h);
-				break;
-				}
-			case LUA_TFUNCTION:{
-				result=&(stack_record->value.gc->cl);
-				break;
-				}
-			case LUA_TTHREAD:{
-				result=&(stack_record->value.gc->th);
-				break;
-				}
-			case LUA_TUSERDATA:
-			case LUA_TLIGHTUSERDATA:{
-				result=(void*)stack_record->value.p;
-				break;
-				}
-			case LUA_TNIL:
-			default:{
-				result=NULL;
-				break;
-				}
-			}
-		}
-#else
 	result=lua_topointer(state,stack_index);
-#endif
 	return result;
 	}
 
@@ -1760,20 +1522,6 @@ int lua_objc_methodcall(lua_State* state){
 //
 	
 int lua_objc_methodlookup(lua_State* state){
-#ifdef LUA_OBJC_EACH_LUA_TYPE_HAS_METATABLE
-	if(lua_istable(state,-2)){
-		lua_pushvalue(state,-1);
-		lua_rawget(state,-3);
-		if(!lua_isnil(state,-1)){
-			return 1;
-			}
-		else{
-			lua_pop(state,1);
-			}
-		}
-	lua_pushvalue(state,-1);
-	lua_pushcclosure(state,&lua_objc_methodcall,1);
-#else
 	lua_pushvalue(state,-1);
 	lua_rawget(state,-3);
 	if(lua_isnil(state,-1)){
@@ -1781,7 +1529,6 @@ int lua_objc_methodlookup(lua_State* state){
 		lua_pushvalue(state,-1);
 		lua_pushcclosure(state,&lua_objc_methodcall,1);
 		}
-#endif
 	return 1;
 	}
 	
