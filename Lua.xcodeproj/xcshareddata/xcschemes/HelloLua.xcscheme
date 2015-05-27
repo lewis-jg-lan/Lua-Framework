@@ -20,34 +20,6 @@
                ReferencedContainer = "container:Lua.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4B6E2B81AF917C200CF84E6"
-               BuildableName = "Tests.xctest"
-               BlueprintName = "Tests"
-               ReferencedContainer = "container:Lua.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4BFB7961B0AAB7000B7A691"
-               BuildableName = "Lua_iOSTests.xctest"
-               BlueprintName = "Lua_iOSTests"
-               ReferencedContainer = "container:Lua.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -60,9 +32,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4BFB7961B0AAB7000B7A691"
-               BuildableName = "Lua_iOSTests.xctest"
-               BlueprintName = "Lua_iOSTests"
+               BlueprintIdentifier = "E4B6E2B81AF917C200CF84E6"
+               BuildableName = "Tests.xctest"
+               BlueprintName = "Tests"
                ReferencedContainer = "container:Lua.xcodeproj">
             </BuildableReference>
          </TestableReference>

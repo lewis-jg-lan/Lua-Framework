@@ -20,20 +20,6 @@
                ReferencedContainer = "container:Lua.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4BFB8441B0BD15500B7A691"
-               BuildableName = "luajit-iosTests.xctest"
-               BlueprintName = "luajit-iosTests"
-               ReferencedContainer = "container:Lua.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -42,16 +28,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4BFB8441B0BD15500B7A691"
-               BuildableName = "luajit-iosTests.xctest"
-               BlueprintName = "luajit-iosTests"
-               ReferencedContainer = "container:Lua.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
