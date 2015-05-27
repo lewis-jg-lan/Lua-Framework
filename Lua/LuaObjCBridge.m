@@ -307,13 +307,11 @@ void lua_objc_configuremetatable(lua_State* state,int stack_index,int hook_gc_ev
 		// Set hook to intercept garbage collection events
 		//
 		
-#ifdef LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
 		if(hook_gc_events){
 			lua_pushstring(state,"__gc");
 			lua_pushcfunction(state,&lua_objc_release);
 			lua_settable(state,metatable);
 			}
-#endif		
 		lua_pop(state,1);
 		}
 	}
@@ -460,9 +458,7 @@ void lua_objc_pushid(lua_State* state,id object){
 //
 
 int lua_objc_release(lua_State* state){
-#ifdef LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
 	[lua_objc_getid(state,-1) release];
-#endif
 	return 0;
 	}
 	
@@ -485,20 +481,14 @@ void lua_objc_setid(lua_State* state,int stack_index,id object){
 	if(!lua_getmetatable(state,stack_index)){
 		lua_newtable(state);
 		lua_setmetatable(state,stack_index);
-#ifdef LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
 		lua_objc_configuremetatable(state,stack_index,[object respondsToSelector:@selector(retain)]);
-#else
-		lua_objc_configuremetatable(state,stack_index,0);
-#endif
 		lua_getmetatable(state,stack_index);
 		}
 	metatable=lua_gettop(state);	
 		
-#ifdef LUA_OBJC_RETAIN_AND_RELEASE_INSTANCES
 	if([object respondsToSelector:@selector(retain)]){
 		[object retain];
 		}
-#endif
 
 	//
 	// Store a reference to the id in the metatable
