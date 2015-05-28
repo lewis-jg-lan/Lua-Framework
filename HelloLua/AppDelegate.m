@@ -11,43 +11,30 @@
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSWindow *window;
-@property (weak) IBOutlet NSTextField *textField;
-@property (strong) LuaContext *context;
+@property (unsafe_unretained) IBOutlet NSTextView *editorView;
+@property (weak) IBOutlet NSTextField *resultLabel;
+@property (strong) LuaContext *luaContext;
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	/* Init Lua virtual machine */
-	LuaVirtualMachine *vm = [[LuaVirtualMachine alloc] init];
-
-	/* Get a context to run the sript */
-	self.context = [[LuaContext alloc] initWithVirtualMachine:vm];
-
-	/* Pass the application delegate to the Lua context */
-	self.context[@"AppDelegate"] = self;
-
-	/* Completition handler for the dialog sheet */
-	self.context[@"handler"] = ^(NSModalResponse response) {
-		printf("Dialog sheet dismissed\n");
-	};
-
-	/* Run the script file 'test.lua' */
-	[self.context evaluateScriptNamed:@"test"];
+	[self.editorView setAutomaticDashSubstitutionEnabled:NO];
+	self.luaContext = [LuaContext new];
+	self.luaContext[@"NSAlert"] = [NSAlert class];
 }
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
-	/* Run a script from a string */
-	[self.context evaluateScript:@"print('Bye!')"];
+- (IBAction)runScript:(id)sender {
+	id result = [self.luaContext evaluateScript:self.editorView.string];
+
+	if (result)
+		[self.resultLabel setStringValue:[NSString stringWithFormat:@"Succeeded with return value: %@", result]];
+	else
+		[self.resultLabel setStringValue:@"Succeeded with no return value."];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
 	return YES;
-}
-
-- (IBAction)buttonClicked:(id)sender {
-	/* Call a function from the lua context passing some parameters */
-	[self.context[@"button_clicked"] callWithArguments:@[@"The parameter"]];
 }
 
 @end
