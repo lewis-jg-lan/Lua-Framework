@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4BFB81C1B0ABFE200B7A691"
-               BuildableName = "libluajit.a"
-               BlueprintName = "luajit"
+               BlueprintIdentifier = "E4B594D91B16A56000D45A33"
+               BuildableName = "Lua_ios.framework"
+               BlueprintName = "Lua_ios"
                ReferencedContainer = "container:Lua.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4BFB81C1B0ABFE200B7A691"
-            BuildableName = "libluajit.a"
-            BlueprintName = "luajit"
+            BlueprintIdentifier = "E4B594D91B16A56000D45A33"
+            BuildableName = "Lua_ios.framework"
+            BlueprintName = "Lua_ios"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -60,9 +60,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4BFB81C1B0ABFE200B7A691"
-            BuildableName = "libluajit.a"
-            BlueprintName = "luajit"
+            BlueprintIdentifier = "E4B594D91B16A56000D45A33"
+            BuildableName = "Lua_ios.framework"
+            BlueprintName = "Lua_ios"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

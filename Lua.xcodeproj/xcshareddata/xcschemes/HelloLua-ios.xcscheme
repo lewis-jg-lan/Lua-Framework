@@ -14,9 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4BFB83A1B0BD15500B7A691"
-               BuildableName = "libluajit-ios.a"
-               BlueprintName = "luajit-ios"
+               BlueprintIdentifier = "E4B594AC1B16A1E700D45A33"
+               BuildableName = "HelloLua-ios.app"
+               BlueprintName = "HelloLua-ios"
+               ReferencedContainer = "container:Lua.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E4B594C41B16A1E800D45A33"
+               BuildableName = "HelloLua-iosTests.xctest"
+               BlueprintName = "HelloLua-iosTests"
                ReferencedContainer = "container:Lua.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,13 +42,23 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E4B594C41B16A1E800D45A33"
+               BuildableName = "HelloLua-iosTests.xctest"
+               BlueprintName = "HelloLua-iosTests"
+               ReferencedContainer = "container:Lua.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4BFB83A1B0BD15500B7A691"
-            BuildableName = "libluajit-ios.a"
-            BlueprintName = "luajit-ios"
+            BlueprintIdentifier = "E4B594AC1B16A1E700D45A33"
+            BuildableName = "HelloLua-ios.app"
+            BlueprintName = "HelloLua-ios"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -48,15 +72,16 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4BFB83A1B0BD15500B7A691"
-            BuildableName = "libluajit-ios.a"
-            BlueprintName = "luajit-ios"
+            BlueprintIdentifier = "E4B594AC1B16A1E700D45A33"
+            BuildableName = "HelloLua-ios.app"
+            BlueprintName = "HelloLua-ios"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -66,15 +91,16 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4BFB83A1B0BD15500B7A691"
-            BuildableName = "libluajit-ios.a"
-            BlueprintName = "luajit-ios"
+            BlueprintIdentifier = "E4B594AC1B16A1E700D45A33"
+            BuildableName = "HelloLua-ios.app"
+            BlueprintName = "HelloLua-ios"
             ReferencedContainer = "container:Lua.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

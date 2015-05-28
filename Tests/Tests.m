@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 #import <Lua/LuaVirtualMachine.h>
 #import <JavaScriptCore/JavaScriptCore.h>
